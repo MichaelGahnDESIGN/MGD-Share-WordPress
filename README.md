@@ -1,3 +1,5 @@
+> **WordPress.org-Kandidat:** Dieser Branch verwendet native Verzeichnis-Updates. Paketbau, Prüfergebnisse und Wechselhinweise: [WordPress.org-Vorbereitung](docs/WORDPRESS-ORG.md). Die nachfolgende bisherige Dokumentation beschreibt auch die separate GitHub-Ausgabe.
+
 <div align="center">
 
 <img src="docs/images/share-title.svg" alt="MGD Share – datensparsam teilen" width="100%">
