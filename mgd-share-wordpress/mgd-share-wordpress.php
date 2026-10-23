@@ -8,6 +8,7 @@
  * Requires PHP: 8.1
  * Author: Michael Gahn DESIGN
  * License: GPL-2.0-or-later
+ * Update URI: https://github.com/MichaelGahnDESIGN/MGD-Share-WordPress
  * Text Domain: mgd-share
  */
 
@@ -21,6 +22,7 @@ define( 'MGD_SHARE_URL', plugin_dir_url( __FILE__ ) );
 require_once MGD_SHARE_DIR . 'includes/class-mgd-share-plugin.php';
 require_once MGD_SHARE_DIR . 'includes/class-mgd-share-renderer.php';
 require_once MGD_SHARE_DIR . 'includes/class-mgd-share-privacy-scanner.php';
+require_once MGD_SHARE_DIR . 'includes/class-mgd-wordpress-plugin-catalog.php';
 require_once MGD_SHARE_DIR . 'includes/class-mgd-share-admin.php';
 
 register_activation_hook( __FILE__, array( 'MGD_Share_Plugin', 'activate' ) );
