@@ -10,16 +10,16 @@ License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
 Privacy-friendly sharing buttons, native sharing and copy-link actions.
 
+== Description ==
+
+Privacy-friendly sharing buttons, native sharing and copy-link actions.
+
 Features:
 
 * Use native Web Share when the browser supports it and a copy-link action otherwise.
 * Choose email, WhatsApp, LinkedIn and X share links.
 * Select content types and automatic placement or use the shortcode.
 * External sharing destinations open only after the visitor chooses them.
-
-== Description ==
-
-Privacy-friendly sharing buttons, native sharing and copy-link actions.
 
 This edition uses native WordPress.org updates. There is no GitHub self-updater or external plugin installer. Updates become available after approval and publication in the directory.
 
