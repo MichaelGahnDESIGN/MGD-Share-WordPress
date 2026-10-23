@@ -54,6 +54,7 @@ No analytics or telemetry service is included. WordPress communicates with WordP
 == Changelog ==
 
 = 0.1.3 =
+* Revalidated directory package checks and documented narrowly reviewed code exceptions.
 * Prepared a WordPress.org candidate with native updates, local assets and reviewed public credits.
 
 == Upgrade Notice ==
