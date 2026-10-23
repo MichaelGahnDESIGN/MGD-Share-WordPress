@@ -1,0 +1,17 @@
+name: Prüfen
+on: [push, pull_request]
+permissions:
+  contents: read
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@f3e473d116dcccaddc5834248c87452386958240 # v2.37.2
+        with: { php-version: '8.1' }
+      - uses: actions/setup-node@v4
+        with: { node-version: '20' }
+      - run: find mgd-share-wordpress -name '*.php' -exec php -l {} \;
+      - run: node --check mgd-share-wordpress/assets/share.js
+      - run: python3 scripts/check-docs.py
+      - run: python3 scripts/build-package.py
