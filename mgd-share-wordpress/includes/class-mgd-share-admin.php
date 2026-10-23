@@ -8,7 +8,7 @@ final class MGD_Share_Admin {
     public function register(): void {
         add_action( 'admin_menu', array( $this, 'menu' ) );
         add_action( 'admin_post_mgd_share_save', array( $this, 'save' ) );
-        ( new MGD_WordPress_Plugin_Catalog_V3() )->register( 'mgd-share' );
+        ( new MGD_WordPress_Plugin_Catalog_V4() )->register( 'mgd-share' );
     }
 
     public function menu(): void {
