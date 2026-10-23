@@ -2,7 +2,7 @@ from pathlib import Path
 from zipfile import ZIP_DEFLATED, ZipFile
 
 root = Path('mgd-share-wordpress')
-target = Path('dist') / 'mgd-share-wordpress-0.1.2.zip'
+target = Path('dist') / 'mgd-share-wordpress-0.1.3.zip'
 target.parent.mkdir(exist_ok=True)
 with ZipFile(target, 'w', ZIP_DEFLATED) as archive:
     for path in sorted(root.rglob('*')):
