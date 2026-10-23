@@ -72,7 +72,7 @@ python3 scripts/check-docs.py
 python3 scripts/build-package.py
 ```
 
-Das installierbare Paket wird unter `dist/mgd-share-wordpress-0.1.0.zip` erzeugt.
+Das installierbare Paket wird unter `dist/mgd-share-wordpress-0.1.4.zip` erzeugt.
 
 ## Sicherheit
 
@@ -97,3 +97,7 @@ Die bisherige Empfehlungstabelle wird zur Plugin-Kollektion mit eigenen Icons, v
 ## 0.1.3 – Updateanzeige nach der Installation
 
 Die Übersicht vergleicht zwischengespeicherte WordPress-Updateangebote zusätzlich mit der tatsächlich installierten Version. Gleiche, ältere oder fehlende Versionsangaben zeigen keine erneute Updateaktion. Sieben Regressionstests sichern diesen Zustand und die Rechteprüfung ab.
+
+## 0.1.4 – Eigene Motive in der Plugin-Kollektion
+
+Sieben passende, lokal mitgelieferte Hintergrundbilder ergänzen die Plugin-Karten. Icons, Suche und Filter bleiben erhalten. [Gestaltung und Herkunft](docs/PLUGIN-KATALOG.md#kartenmotive--24102026).
