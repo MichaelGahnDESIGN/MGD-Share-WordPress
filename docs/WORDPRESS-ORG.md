@@ -59,3 +59,7 @@ Nachweise: Wiederholungsabfragen und Invalidierung mit echten Daten, persönlich
 Das Plugin hatte bereits keine Plugin-Check-Warnungen. Seine funktionierende Ausgabe bleibt unverändert und wird erneut mitgeprüft.
 
 Es gibt jetzt ausdrücklich offengelegte statische Einzel-Ausnahmen. Die früheren Aussagen zu unverändert erhaltenen Rohmeldungen beschreiben die damaligen Läufe; der neue Stand enthält die fachlich geprüften Code-Anmerkungen. Keine Laufzeit-/Performance-Prüfung wird ausgeschaltet. Vollständige Liste: `wordpress-org/GEPRUEFTE-AUSNAHMEN.md`; neuer Bericht: `wordpress-org/ERGEBNIS.md`.
+
+## Rohbericht statt nur Exit-Code
+
+Die CI prüft nach dem offiziellen Plugin Check auch dessen vollständige Datei im Runner-Temp-Verzeichnis. Ein neuer Validator schlägt bei PHP-/Datenbankfehlern oder unbekannten Ausgaben fehl, selbst wenn der Plugin-Check-Wrapper einen grünen Status liefern sollte. Acht Parser-Regressionen laufen vor jedem Check; keine Warnungsgruppe wird dadurch ausgeblendet.
