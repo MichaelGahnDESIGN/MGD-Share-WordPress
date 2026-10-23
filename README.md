@@ -81,3 +81,7 @@ Bitte keine Sicherheitslücken, Zugangsdaten oder personenbezogenen Testdaten in
 ## Lizenz
 
 [GPL-2.0-or-later](mgd-share-wordpress/LICENSE)
+
+## 0.1.1 – Plugin-Verwaltung
+
+Separate Update-Prüfung, Plugin-Links und ergänzte lokale Details. [Anleitung](docs/WORDPRESS-VERWALTUNG.md).
