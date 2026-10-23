@@ -4,7 +4,7 @@ Tags: sharing, privacy
 Requires at least: 6.5
 Tested up to: 7.1
 Requires PHP: 8.1
-Stable tag: 0.1.1
+Stable tag: 0.1.3
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -27,6 +27,12 @@ Documentation and source: https://github.com/MichaelGahnDESIGN/MGD-Share-WordPre
 
 
 
+== External services ==
+
+No remote scripts or tracking are loaded by the sharing toolbar. Clicking a configured sharing link opens WhatsApp (https://wa.me/), LinkedIn (https://www.linkedin.com/sharing/share-offsite/) or X (https://twitter.com/intent/tweet) with the current page URL and, where supported, its title. The visitor chooses whether to continue there. The selected service receives this information and the browser connection. Email sharing opens the visitor's mail application.
+
+Service information and privacy policies: https://www.whatsapp.com/legal/privacy-policy , https://www.linkedin.com/legal/privacy-policy , https://x.com/en/privacy .
+
 == Installation ==
 
 1. Upload the plugin folder or install the approved directory release from Plugins > Add New.
@@ -41,12 +47,16 @@ WordPress checks the official directory. This edition has no configurable update
 = Does it send analytics? =
 No analytics or telemetry service is included. WordPress communicates with WordPress.org for native updates. Support links open only when clicked.
 
+== Screenshots ==
+
+1. Share dashboard with privacy information.
+
 == Changelog ==
 
-= 0.1.1 =
+= 0.1.3 =
 * Prepared a WordPress.org candidate with native updates, local assets and reviewed public credits.
 
 == Upgrade Notice ==
 
-= 0.1.1 =
+= 0.1.3 =
 Submission candidate. Do not activate alongside the GitHub edition. Back up the database before changing distribution channels.
