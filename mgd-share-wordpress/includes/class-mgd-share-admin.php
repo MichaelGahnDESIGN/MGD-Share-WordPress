@@ -8,7 +8,6 @@ final class MGD_Share_Admin {
     public function register(): void {
         add_action( 'admin_menu', array( $this, 'menu' ) );
         add_action( 'admin_post_mgd_share_save', array( $this, 'save' ) );
-        ( new MGD_WordPress_Plugin_Catalog() )->register( 'mgd-share' );
     }
 
     public function menu(): void {
@@ -55,7 +54,7 @@ final class MGD_Share_Admin {
             'networks' => $networks,
             'label' => sanitize_text_field( wp_unslash( $_POST['label'] ?? 'Teilen' ) ),
             'style' => in_array( sanitize_key( $_POST['style'] ?? '' ), $allowed_styles, true ) ? sanitize_key( $_POST['style'] ) : 'rounded',
-            'accent' => sanitize_hex_color( $_POST['accent'] ?? '' ) ?: '#1d4ed8',
+            'accent' => sanitize_hex_color( wp_unslash( $_POST['accent'] ?? '' ) ) ?: '#1d4ed8',
             'show_label' => true,
         ) );
         wp_safe_redirect( admin_url( 'admin.php?page=mgd-share-settings&updated=1' ) ); exit;

@@ -1,0 +1,52 @@
+=== MGD Share ===
+Contributors: michaelgahndesign
+Tags: sharing, privacy
+Requires at least: 6.5
+Tested up to: 7.1
+Requires PHP: 8.1
+Stable tag: 0.1.1
+License: GPLv2 or later
+License URI: https://www.gnu.org/licenses/gpl-2.0.html
+
+Privacy-friendly sharing buttons, native sharing and copy-link actions.
+
+Features:
+
+* Use native Web Share when the browser supports it and a copy-link action otherwise.
+* Choose email, WhatsApp, LinkedIn and X share links.
+* Select content types and automatic placement or use the shortcode.
+* External sharing destinations open only after the visitor chooses them.
+
+== Description ==
+
+Privacy-friendly sharing buttons, native sharing and copy-link actions.
+
+This edition uses native WordPress.org updates. There is no GitHub self-updater or external plugin installer. Updates become available after approval and publication in the directory.
+
+Documentation and source: https://github.com/MichaelGahnDESIGN/MGD-Share-WordPress
+
+
+
+== Installation ==
+
+1. Upload the plugin folder or install the approved directory release from Plugins > Add New.
+2. Activate the plugin and review its settings.
+3. Test the configured features before enabling them on a production website.
+
+== Frequently Asked Questions ==
+
+= How are updates delivered? =
+WordPress checks the official directory. This edition has no configurable update repository.
+
+= Does it send analytics? =
+No analytics or telemetry service is included. WordPress communicates with WordPress.org for native updates. Support links open only when clicked.
+
+== Changelog ==
+
+= 0.1.1 =
+* Prepared a WordPress.org candidate with native updates, local assets and reviewed public credits.
+
+== Upgrade Notice ==
+
+= 0.1.1 =
+Submission candidate. Do not activate alongside the GitHub edition. Back up the database before changing distribution channels.
