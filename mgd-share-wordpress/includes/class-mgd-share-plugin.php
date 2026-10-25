@@ -8,7 +8,8 @@ final class MGD_Share_Plugin {
             'enabled' => true,
             'placement' => 'none',
             'post_types' => array( 'post', 'page' ),
-            'networks' => array( 'copy', 'native', 'email', 'whatsapp', 'linkedin', 'x' ),
+            // Externe Plattformen sind eine bewusste Betreiberentscheidung.
+            'networks' => array( 'copy', 'native', 'email' ),
             'label' => 'Teilen',
             'style' => 'rounded',
             'accent' => '#1d4ed8',
