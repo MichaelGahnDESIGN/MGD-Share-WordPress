@@ -3,7 +3,7 @@
  * Plugin Name: MGD Share
  * Plugin URI: https://github.com/MichaelGahnDESIGN/MGD-Share-WordPress
  * Description: Datenschutzfreundliche Teilen-Funktion mit Link-Kopie und Datenschutz-Dashboard.
- * Version: 0.1.4
+ * Version: 0.1.5
  * Requires at least: 6.5
  * Requires PHP: 8.1
  * Author: Michael Gahn DESIGN
@@ -14,7 +14,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'MGD_SHARE_VERSION', '0.1.4' );
+define( 'MGD_SHARE_VERSION', '0.1.5' );
 define( 'MGD_SHARE_FILE', __FILE__ );
 define( 'MGD_SHARE_DIR', plugin_dir_path( __FILE__ ) );
 define( 'MGD_SHARE_URL', plugin_dir_url( __FILE__ ) );
@@ -35,7 +35,7 @@ require_once __DIR__ . '/includes/class-mgd-plugin-admin-tools.php';
     'slug' => 'mgd-share-wordpress',
     'name' => 'MGD Share',
     'description' => 'Datenschutzfreundliche Teilen-Funktion mit Link-Kopie und Datenschutz-Dashboard.',
-    'version' => '0.1.4',
+    'version' => '0.1.5',
     'settings' => 'admin.php?page=mgd-share-settings',
     'requires' => '6.5',
     'php' => '8.1',
