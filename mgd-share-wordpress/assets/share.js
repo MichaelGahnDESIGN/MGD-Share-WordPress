@@ -1,11 +1,10 @@
 (() => {
-  const labels = { whatsapp: 'WhatsApp', linkedin: 'LinkedIn', x: 'X' };
+  const labels = { whatsapp: 'WhatsApp', linkedin: 'LinkedIn' };
   const encode = encodeURIComponent;
   const targetFor = (action, title, url) => ({
     email: `mailto:?subject=${encode(title)}&body=${encode(`${title}\n${url}`)}`,
     whatsapp: `https://wa.me/?text=${encode(`${title} ${url}`)}`,
     linkedin: `https://www.linkedin.com/sharing/share-offsite/?url=${encode(url)}`,
-    x: `https://x.com/intent/post?text=${encode(title)}&url=${encode(url)}`,
   })[action];
 
   document.querySelectorAll('[data-mgd-share]').forEach((root) => {

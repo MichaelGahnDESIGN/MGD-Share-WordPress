@@ -60,6 +60,6 @@ final class MGD_Share_Renderer {
     }
 
     private function button_label( string $network ): string {
-        return array( 'copy' => 'Link kopieren', 'native' => 'Teilen', 'email' => 'E-Mail', 'whatsapp' => 'WhatsApp', 'linkedin' => 'LinkedIn', 'x' => 'X' )[ $network ] ?? 'Teilen';
+        return array( 'copy' => 'Link kopieren', 'native' => 'Teilen', 'email' => 'E-Mail', 'whatsapp' => 'WhatsApp', 'linkedin' => 'LinkedIn' )[ $network ] ?? 'Teilen';
     }
 }

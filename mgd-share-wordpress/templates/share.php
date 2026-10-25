@@ -1,7 +1,7 @@
 <?php
 defined( 'ABSPATH' ) || exit;
 
-$networks = array_values( array_intersect( array( 'copy', 'native', 'email', 'whatsapp', 'linkedin', 'x' ), $settings['networks'] ) );
+$networks = array_values( array_intersect( array( 'copy', 'native', 'email', 'whatsapp', 'linkedin' ), $settings['networks'] ) );
 $menu_id = wp_unique_id( 'mgd-share-menu-' );
 $dialog_id = wp_unique_id( 'mgd-share-dialog-' );
 ?>
@@ -12,7 +12,7 @@ $dialog_id = wp_unique_id( 'mgd-share-dialog-' );
         <p class="mgd-share__hint"><?php esc_html_e( 'Link kopieren oder eine Methode auswählen.', 'mgd-share' ); ?></p>
         <div class="mgd-share__actions">
             <?php foreach ( $networks as $network ) : ?>
-                <button class="mgd-share__button" type="button" data-mgd-share-action="<?php echo esc_attr( $network ); ?>"<?php echo in_array( $network, array( 'whatsapp', 'linkedin', 'x' ), true ) ? ' data-mgd-share-external' : ''; ?>><?php echo esc_html( $this->button_label( $network ) ); ?></button>
+                <button class="mgd-share__button" type="button" data-mgd-share-action="<?php echo esc_attr( $network ); ?>"<?php echo in_array( $network, array( 'whatsapp', 'linkedin' ), true ) ? ' data-mgd-share-external' : ''; ?>><?php echo esc_html( $this->button_label( $network ) ); ?></button>
             <?php endforeach; ?>
         </div>
     </div>
