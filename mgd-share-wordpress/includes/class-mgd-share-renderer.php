@@ -40,9 +40,9 @@ final class MGD_Share_Renderer {
         }
         wp_enqueue_style( 'mgd-share' );
         wp_enqueue_script( 'mgd-share' );
-        $url = get_permalink();
-        $title = get_the_title();
-        if ( ! $url || ! $title ) {
+        $url = $this->share_url();
+        $title = get_the_title() ?: __( 'Diese Seite', 'mgd-share' );
+        if ( ! $url ) {
             return '';
         }
         ob_start();
@@ -50,7 +50,16 @@ final class MGD_Share_Renderer {
         return (string) ob_get_clean();
     }
 
+    /** Liefert eine stabile Seitenadresse ohne Fragmente oder Besucherparameter. */
+    private function share_url(): string {
+        $url = wp_get_canonical_url() ?: get_permalink();
+        if ( ! $url ) {
+            return '';
+        }
+        return strtok( esc_url_raw( $url ), '?#' ) ?: '';
+    }
+
     private function button_label( string $network ): string {
-        return array( 'copy' => 'Link kopieren', 'native' => 'Teilen', 'email' => 'E-Mail', 'whatsapp' => 'WhatsApp', 'linkedin' => 'LinkedIn', 'x' => 'X' )[ $network ] ?? 'Teilen';
+        return array( 'copy' => 'Link kopieren', 'native' => 'Teilen', 'email' => 'E-Mail', 'whatsapp' => 'WhatsApp', 'linkedin' => 'LinkedIn' )[ $network ] ?? 'Teilen';
     }
 }

@@ -16,7 +16,7 @@
 
 ---
 
-MGD Share bringt einen Share-Button mit **Link kopieren**, System-Teilen, E-Mail und optionalen Plattform-Links in WordPress. Anders als eingebettete Social-Share-Widgets lädt das Plugin beim Seitenaufruf keine Ressourcen von WhatsApp, LinkedIn, X oder anderen Plattformen. Erst nach einem Klick öffnet sich das gewählte Ziel.
+MGD Share bringt einen Share-Button mit **Link kopieren**, System-Teilen, E-Mail und optionalen Plattform-Links in WordPress. Anders als eingebettete Social-Share-Widgets lädt das Plugin beim Seitenaufruf keine Ressourcen von WhatsApp, LinkedIn oder anderen Plattformen. Erst nach einem Klick öffnet sich das gewählte Ziel.
 
 > **Status:** Erste Testversion. Die Datenschutz-Hinweise sind technische Orientierung für DE und EU und ersetzen keine Rechtsberatung.
 
@@ -26,7 +26,7 @@ MGD Share bringt einen Share-Button mit **Link kopieren**, System-Teilen, E-Mail
 | --- | --- |
 | Link teilen | Kopieren in die Zwischenablage mit zugänglicher Rückmeldung |
 | System-Funktion | Web Share API auf unterstützten Geräten |
-| Externe Ziele | E-Mail, WhatsApp, LinkedIn und X – erst nach Klick |
+| Externe Ziele | E-Mail, WhatsApp und LinkedIn – erst nach Klick |
 | Darstellung | Vor/Nach Inhalt oder frei über Shortcode, drei Stile und Akzentfarbe |
 | Dashboard | Datenschutz-Check und Erkennung bekannter Datenschutz-Plugins |
 | Datenschutz | Keine Social-Media-Skripte, Cookies oder Tracking-Aufrufe durch MGD Share |
