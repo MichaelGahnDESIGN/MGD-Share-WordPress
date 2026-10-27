@@ -33,7 +33,7 @@ MGD Share bringt einen Share-Button mit **Link kopieren**, System-Teilen, E-Mail
 
 ## Installation
 
-1. Lade [**MGD Share 0.1.5**](https://github.com/MichaelGahnDESIGN/MGD-Share-WordPress/releases/download/v0.1.5/mgd-share-wordpress-0.1.5.zip) herunter oder erzeuge lokal ein Paket.
+1. Lade [**MGD Share 0.1.6**](https://github.com/MichaelGahnDESIGN/MGD-Share-WordPress/releases/download/v0.1.6/mgd-share-wordpress-0.1.6.zip) herunter oder erzeuge lokal ein Paket.
 2. Öffne in WordPress **Plugins → Installieren → Plugin hochladen**.
 3. Aktiviere **MGD Share**.
 4. Konfiguriere unter **MGD Share → Einstellungen** Position, Funktionen und Design.
@@ -72,7 +72,7 @@ python3 scripts/check-docs.py
 python3 scripts/build-package.py
 ```
 
-Das installierbare Paket wird unter `dist/mgd-share-wordpress-0.1.5.zip` erzeugt.
+Das installierbare Paket wird unter `dist/mgd-share-wordpress-0.1.6.zip` erzeugt.
 
 ## Sicherheit
 
@@ -105,3 +105,7 @@ Sieben passende, lokal mitgelieferte Hintergrundbilder ergänzen die Plugin-Kart
 ## 0.1.5 – Wartungsrelease
 
 Die GitHub-Prüfungen verwenden aktualisierte, gepinnte Abhängigkeiten. Das verbessert die Wartbarkeit der Release-Prüfung; die Share-Funktionen und die Datenflüsse für Besucherinnen und Besucher bleiben unverändert.
+
+## 0.1.6 – Icons und Hintergründe aus dem Feed (27.10.2026)
+
+Icons und Hintergründe der Karten unter „Weitere Plugins" kommen jetzt aus theme.michael-gahn.de. Der Server holt sie einmal und speichert sie lokal; der Browser lädt nichts extern. Ohne Bild bleibt das mitgelieferte Motiv. Versionen werden ohne führendes „v" angezeigt.
