@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Mgd\Share\Kit\Platform\WordPress;
 
-use Mgd\Share\Kit\Install\{CallbackStore, CurlTransport};
+use Mgd\Share\Kit\Install\{CallbackStore, CurlTransport, InstallClient, Transport};
 use Mgd\Share\Kit\Install\Platform\WordPress;
 use Mgd\Share\Kit\Catalog\Recommendations;
 use Mgd\Share\Kit\License\{CurlPost, LicenseClient};
@@ -80,6 +80,37 @@ final class Setup
             } catch (\Throwable) {
             }
         });
+    }
+
+    /**
+     * Deinstallieren: Eintrag auf der Plattform löschen (gespeicherter Schlüssel), danach Kit-Optionen von dem Produkt weg
+     * Läuft von selbst über uninstall_<basename>. Plugins mit eigener uninstall.php rufen das dort auf. Wirft nie
+     */
+    public static function uninstall(string $product, string $platform, ?Transport $http = null): bool
+    {
+        if (preg_match(self::PRODUCT_RE, $product) !== 1) {
+            return false;
+        }
+        $done = false;
+        try {
+            $c = self::installClient($product, $platform, $http);
+            if ($c !== null) {
+                $c->setEnabled(false);
+                $done = true;
+            }
+        } catch (\Throwable) {
+        }
+        try {
+            self::forget($product);
+        } catch (\Throwable) {
+        }
+
+        return $done;
+    }
+
+    /** Fallback für register_uninstall_hook (nur statisch erlaubt) - die echte Arbeit macht der uninstall_ Hook aus boot() */
+    public static function onUninstall(): void
+    {
     }
 
     /**
@@ -165,6 +196,31 @@ final class Setup
         } catch (\Throwable) {
             return null;
         }
+    }
+
+    // gleiche Option wie WordPress::client, Transport nur für Tests austauschbar. Version egal fürs Löschen
+    private static function installClient(string $product, string $platform, ?Transport $http): ?InstallClient
+    {
+        if ($http === null) {
+            return WordPress::client($product, $platform, '0.0.0');
+        }
+        $opt = 'mgd_install_' . str_replace('-', '_', $product);
+        $store = new CallbackStore(static fn (): mixed => \get_option($opt, ''), static function (string $v) use ($opt): void {
+            \update_option($opt, $v, false);
+        });
+
+        return new InstallClient($http, $store, $product, $platform, '0.0.0', '');
+    }
+
+    // nur die eigenen Namen vom Produkt, nix mit LIKE
+    private static function forget(string $product): void
+    {
+        $id = str_replace('-', '_', $product);
+        foreach (['mgd_install_', 'mgd_kit_cleanup_', 'mgd_kit_rec_', 'mgd_kit_lic_', 'mgd_kit_upd_ok_', 'mgd_kit_ver_'] as $p) {
+            \delete_option($p . $id);
+        }
+        \delete_site_transient('mgd_kit_upd_' . $id);
+        \delete_transient(InstallBoot::flag($product));
     }
 
     // aus = Attrappe ohne Netz

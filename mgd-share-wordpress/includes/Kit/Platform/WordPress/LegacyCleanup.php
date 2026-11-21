@@ -5,10 +5,13 @@ declare(strict_types=1);
 namespace Mgd\Share\Kit\Platform\WordPress;
 
 // Alte Caches vom vorherigen Updater wegräumen (z. B. mgd_admin_release_*), 1x pro Plugin-Version
-// Nur Namen mit mgd_ vorne + [a-z0-9_], * am Ende = Präfix. Install-Client + Kit-Daten sind tabu
+// Nur Namen mit mgd_ vorne, * am Ende = Präfix. Install-Client + Kit-Daten sind tabu
+// Präfix streng [a-z0-9_], Rest dahinter darf - haben (Slugs wie mgd_admin_release_mgd-share-wordpress)
 final class LegacyCleanup
 {
-    public const NAME_RE = '/^mgd_[a-z0-9_]{3,150}$/D';
+    public const NAME_RE = '/^mgd_[a-z0-9_-]{3,150}$/D';
+    public const PREFIX_RE = '/^mgd_[a-z0-9_]{3,150}$/D';
+    public const REST_RE = '/^[a-z0-9_-]+$/D';
     public const PROTECTED = ['mgd_install_', 'mgd_kit_'];
     public const MAX_ROWS = 500;
     // so legt WP Transients in wp_options ab
@@ -27,7 +30,7 @@ final class LegacyCleanup
             }
             $isPrefix = str_ends_with($n, '*');
             $base = $isPrefix ? substr($n, 0, -1) : $n;
-            if (preg_match(self::NAME_RE, $base) !== 1 || self::isProtected($base)) {
+            if (preg_match($isPrefix ? self::PREFIX_RE : self::NAME_RE, $base) !== 1 || self::isProtected($base)) {
                 continue;
             }
             $out[$isPrefix ? 'prefix' : 'exact'][] = $base;
@@ -84,7 +87,7 @@ final class LegacyCleanup
     {
         foreach (self::WRAP as $w) {
             $rest = str_starts_with($name, $w . $prefix) ? substr($name, strlen($w)) : null;
-            if ($rest !== null && preg_match('/^[a-z0-9_]+$/D', $rest) === 1 && !self::isProtected($rest)) {
+            if ($rest !== null && preg_match(self::REST_RE, $rest) === 1 && !self::isProtected($rest)) {
                 return true;
             }
         }

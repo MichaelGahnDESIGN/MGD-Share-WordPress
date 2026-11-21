@@ -29,14 +29,24 @@ final class InstallBoot
         self::$booted[$product] = true;
         WordPress::boot($pluginFile, $product, $platform, $version, $settingsUrl);
         $basename = \plugin_basename($pluginFile);
+        // Deinstallieren: WP bindet vorher die Hauptdatei ein > dieser Hook ist dann schon da
+        \add_action('uninstall_' . $basename, static function () use ($product, $platform): void {
+            Setup::uninstall($product, $platform);
+        });
+        \register_activation_hook($pluginFile, static function () use ($pluginFile): void {
+            self::registerUninstall($pluginFile);
+        });
         \add_action('upgrader_process_complete', static function (mixed $upgrader = null, mixed $extra = []) use ($product, $basename): void {
             self::afterUpgrade($product, $basename, $extra);
         }, 10, 2);
         // prio 0 = vor dem admin_init vom Install-Client
-        \add_action('admin_init', static function () use ($product, $version): void {
+        \add_action('admin_init', static function () use ($product, $version, $pluginFile): void {
             try {
                 self::dedupe($product);
-                self::versionChanged($product, $version);
+                // nach Update ohne neu aktivieren den Uninstall-Hook nachtragen
+                if (self::versionChanged($product, $version)) {
+                    self::registerUninstall($pluginFile);
+                }
             } catch (\Throwable) {
             }
         }, 0);
@@ -70,6 +80,17 @@ final class InstallBoot
         \set_transient(self::flag($product), 1, self::NOTICE_TTL);
 
         return true;
+    }
+
+    /** WP ruft uninstall_<basename> nur auf, wenn ein Uninstall-Hook gespeichert ist. WP schreibt nur bei Änderung */
+    public static function registerUninstall(string $pluginFile): void
+    {
+        try {
+            if (function_exists('register_uninstall_hook')) {
+                \register_uninstall_hook($pluginFile, [Setup::class, 'onUninstall']);
+            }
+        } catch (\Throwable) {
+        }
     }
 
     /** doppelte boot-Hooks raus, der erste bleibt. Rückgabe = Anzahl entfernt */

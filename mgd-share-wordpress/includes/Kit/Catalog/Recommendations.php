@@ -105,7 +105,34 @@ final class Recommendations
             return null;
         }
 
-        return $this->clean($rows);
+        return $this->clean(self::order($rows, $this->relatedOf($items)));
+    }
+
+    // KATALOG.md: empfohlene (related vom eigenen Eintrag) zuerst, dann live vor announced, sonst Feed-Reihenfolge
+    /** @param list<array<mixed>> $rows @param list<string> $related @return list<array<mixed>> */
+    private static function order(array $rows, array $related): array
+    {
+        $rank = static fn (array $r): int => (in_array($r['slug'] ?? null, $related, true) ? 0 : 2) + (($r['status'] ?? 'live') === 'announced' ? 1 : 0);
+        $keyed = [];
+        foreach (array_values($rows) as $i => $r) {
+            $keyed[] = [$rank($r), $i, $r];
+        }
+        usort($keyed, static fn (array $a, array $b): int => [$a[0], $a[1]] <=> [$b[0], $b[1]]);
+
+        return array_column($keyed, 2);
+    }
+
+    /** @param list<mixed> $items @return list<string> */
+    private function relatedOf(array $items): array
+    {
+        foreach ($items as $row) {
+            $id = is_array($row) ? ($row['slug'] ?? $row['id'] ?? null) : null;
+            if ($id !== null && $id === $this->selfSlug && is_array($row['related'] ?? null)) {
+                return array_values(array_filter($row['related'], 'is_string'));
+            }
+        }
+
+        return [];
     }
 
     private function resolve(): array
