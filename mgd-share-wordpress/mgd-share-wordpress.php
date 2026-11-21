@@ -39,8 +39,8 @@ spl_autoload_register( static function ( string $class ): void {
 } );
 
 // Updater + Install-Melder vom Baukasten, alter GitHub-Updater (Admin-Tools) ist raus
-\Mgd\Share\Kit\Platform\WordPress\Setup::updater( __FILE__, 'mgd-share-wordpress', 'wordpress', MGD_SHARE_VERSION, 'MGD Share' );
-\Mgd\Share\Kit\Install\Platform\WordPress::boot( __FILE__, 'mgd-share-wordpress', 'wordpress', MGD_SHARE_VERSION, admin_url( 'admin.php?page=mgd-share-settings' ) );
+MGD_Share_Plugin::$updater = \Mgd\Share\Kit\Platform\WordPress\Setup::updater( __FILE__, 'mgd-share-wordpress', 'wordpress', MGD_SHARE_VERSION, 'MGD Share' );
+\Mgd\Share\Kit\Install\Platform\WordPress::boot( __FILE__, 'mgd-share-wordpress', 'wordpress', MGD_SHARE_VERSION, admin_url( 'admin.php?page=mgd-share-plugins' ) );
 
 // Link Einstellungen in der Plugin-Liste
 add_filter( 'plugin_action_links_' . plugin_basename( __FILE__ ), static function ( array $links ): array {

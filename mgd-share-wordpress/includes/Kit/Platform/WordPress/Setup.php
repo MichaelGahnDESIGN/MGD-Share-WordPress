@@ -7,6 +7,7 @@ namespace Mgd\Share\Kit\Platform\WordPress;
 use Mgd\Share\Kit\Install\{CallbackStore, CurlTransport};
 use Mgd\Share\Kit\Install\Platform\WordPress;
 use Mgd\Share\Kit\Catalog\Recommendations;
+use Mgd\Share\Kit\License\{CurlPost, LicenseClient};
 
 // Einstieg fürs Hauptplugin (docs/PLUGIN-BAUKASTEN.md). Fehler > null, der WP-Admin läuft immer weiter
 final class Setup
@@ -54,5 +55,71 @@ final class Setup
         } catch (\Throwable) {
             return null;
         }
+    }
+
+    /**
+     * Lizenz-Baustein. Standard aus: dann kein Netz, kein UI, isPro() = false
+     * Plugin-Lizenzen für wordpress sind auf dem Server noch nicht verkäuflich > erst mit Schritt 7 einschalten
+     */
+    public static function license(string $product, string $platform, bool $licenseEnabled = false): LicenseClient
+    {
+        try {
+            if (!$licenseEnabled || preg_match(self::PRODUCT_RE, $product) !== 1) {
+                return self::licenseOff();
+            }
+            $opt = 'mgd_kit_lic_' . str_replace('-', '_', $product);
+            $store = new CallbackStore(
+                static fn (): mixed => \get_option($opt, ''),
+                static function (string $v) use ($opt): void {
+                    \update_option($opt, $v, false);
+                },
+            );
+            $domain = strtolower((string) \wp_parse_url(\home_url(), PHP_URL_HOST));
+
+            return new LicenseClient(new CurlPost('MGDKit/1.0 (' . $platform . ')'), $store, $domain, true);
+        } catch (\Throwable) {
+            return self::licenseOff();
+        }
+    }
+
+    /**
+     * Admin-Seite mit allen Bereichen. $parent = options-general.php (Einstellungen) oder eigener Menü-Slug, '' = kein Menüpunkt
+     * Speichern von "Installation melden" läuft wie bisher über WordPress::boot()
+     */
+    public static function dashboard(
+        string $product,
+        string $platform,
+        string $version,
+        string $pluginName,
+        ?Updater $updater = null,
+        ?Recommendations $recommendations = null,
+        bool $licenseEnabled = false,
+        string $parent = 'options-general.php',
+    ): ?Dashboard {
+        try {
+            $d = new Dashboard(
+                $pluginName,
+                $version,
+                $product,
+                $updater,
+                $recommendations,
+                self::license($product, $platform, $licenseEnabled),
+                static fn (): string => WordPress::settingsHtml($product, $platform, $version),
+            );
+            if ($parent !== '') {
+                $d->register($parent);
+            }
+
+            return $d;
+        } catch (\Throwable) {
+            return null;
+        }
+    }
+
+    // aus = Attrappe ohne Netz
+    private static function licenseOff(): LicenseClient
+    {
+        return new LicenseClient(null, new CallbackStore(static fn (): mixed => '', static function (string $v): void {
+        }), '', false);
     }
 }

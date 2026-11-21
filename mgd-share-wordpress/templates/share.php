@@ -1,6 +1,6 @@
 <?php
 defined( 'ABSPATH' ) || exit;
-$networks = array_values( array_intersect( array( 'copy', 'native', 'email', 'whatsapp', 'linkedin', 'x' ), $settings['networks'] ) );
+$networks = array_values( array_intersect( MGD_Share_Plugin::NETWORKS, $settings['networks'] ) );
 ?>
 <section class="mgd-share mgd-share--<?php echo esc_attr( $settings['style'] ); ?>" data-mgd-share data-url="<?php echo esc_url( $url ); ?>" data-title="<?php echo esc_attr( $title ); ?>" style="--mgd-share-accent:<?php echo esc_attr( $settings['accent'] ); ?>">
     <span class="mgd-share__label"><?php echo esc_html( $settings['label'] ); ?></span>

@@ -16,7 +16,7 @@
 
 ---
 
-MGD Share bringt einen Share-Button mit **Link kopieren**, System-Teilen, E-Mail und optionalen Plattform-Links in WordPress. Anders als eingebettete Social-Share-Widgets lädt das Plugin beim Seitenaufruf keine Ressourcen von WhatsApp, LinkedIn, X oder anderen Plattformen. Erst nach einem Klick öffnet sich das gewählte Ziel.
+MGD Share bringt einen Share-Button mit **Link kopieren**, System-Teilen, E-Mail und optionalen Plattform-Links in WordPress. Anders als eingebettete Social-Share-Widgets lädt das Plugin beim Seitenaufruf keine Ressourcen von WhatsApp, LinkedIn oder anderen Plattformen. Erst nach einem Klick öffnet sich das gewählte Ziel.
 
 > **Status:** Erste Testversion. Die Datenschutz-Hinweise sind technische Orientierung für DE und EU und ersetzen keine Rechtsberatung.
 
@@ -26,7 +26,7 @@ MGD Share bringt einen Share-Button mit **Link kopieren**, System-Teilen, E-Mail
 | --- | --- |
 | Link teilen | Kopieren in die Zwischenablage mit zugänglicher Rückmeldung |
 | System-Funktion | Web Share API auf unterstützten Geräten |
-| Externe Ziele | E-Mail, WhatsApp, LinkedIn und X – erst nach Klick |
+| Externe Ziele | E-Mail, WhatsApp und LinkedIn – erst nach Klick |
 | Darstellung | Vor/Nach Inhalt oder frei über Shortcode, drei Stile und Akzentfarbe |
 | Dashboard | Datenschutz-Check und Erkennung bekannter Datenschutz-Plugins |
 | Datenschutz | Keine Social-Media-Skripte, Cookies oder Tracking-Aufrufe durch MGD Share |
@@ -116,5 +116,6 @@ Diese Version ist eine Brückenversion. Deine Einstellungen bleiben genau so, wi
 
 - **Updates:** WordPress zeigt neue Versionen jetzt über theme.michael-gahn.de an. Vor der Installation wird geprüft, ob die Datei vollständig und unverändert ist (Größe und Prüfsumme). Der alte Update-Weg über GitHub ist abgeschaltet.
 - **Automatische Updates** bleiben aus, bis du sie selbst unter „Plugins“ einschaltest.
-- **Weitere Plugins:** Die Seite zeigt jetzt einfache Karten mit Name, Beschreibung, Version und dem Link „Mehr erfahren“. Antwortet der Server nicht, siehst du eine mitgelieferte Liste.
-- **Installation melden:** Unter „MGD Share → Einstellungen“ gibt es einen Schalter. Ist er an, meldet sich das Plugin höchstens einmal am Tag bei theme.michael-gahn.de (Plugin-Name, Version, Shopsystem, Domain, zufällige Installations-ID). Du kannst ihn jederzeit abschalten.
+- **Neue Seite „Info und Updates“:** Unter „MGD Share“ findest du jetzt eine Seite mit Version, Update-Stand, weiteren Plugins und dem Schalter „Installation melden“. Die weiteren Plugins erscheinen als einfache Karten mit Name, Beschreibung, Version und dem Link „Mehr erfahren“. Antwortet der Server nicht, siehst du eine mitgelieferte Liste.
+- **X/Twitter als Ziel entfernt.** X kann nicht mehr ausgewählt werden. War X in deinen Einstellungen aktiv, wird es beim Update entfernt. Alle anderen Ziele und das System-Teilen des Browsers bleiben, wie sie sind.
+- **Installation melden:** Auf der Seite „Info und Updates“ gibt es einen Schalter. Ist er an, meldet sich das Plugin höchstens einmal am Tag bei theme.michael-gahn.de (Plugin-Name, Version, Shopsystem, Domain, zufällige Installations-ID). Du kannst ihn jederzeit abschalten.

@@ -24,7 +24,6 @@
         email: `mailto:?subject=${encode(title)}&body=${encode(`${title}\n${url}`)}`,
         whatsapp: `https://wa.me/?text=${encode(`${title} ${url}`)}`,
         linkedin: `https://www.linkedin.com/sharing/share-offsite/?url=${encode(url)}`,
-        x: `https://x.com/intent/post?text=${encode(title)}&url=${encode(url)}`,
       };
       if (targets[action]) open(targets[action]);
       else if (action === 'native') { try { await navigator.clipboard.writeText(url); announce('Dein Browser unterstützt System-Teilen nicht. Der Link wurde kopiert.'); } catch { window.prompt('Kopiere diesen Link:', url); } }

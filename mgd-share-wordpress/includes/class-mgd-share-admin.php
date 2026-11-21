@@ -13,8 +13,8 @@ final class MGD_Share_Admin {
     public function menu(): void {
         add_menu_page( 'MGD Share', 'MGD Share', 'manage_options', 'mgd-share', array( $this, 'dashboard' ), 'dashicons-share', 58 );
         add_submenu_page( 'mgd-share', 'Einstellungen', 'Einstellungen', 'manage_options', 'mgd-share-settings', array( $this, 'settings_page' ) );
-        // Weitere Plugins jetzt über RecommendationsView vom Baukasten
-        add_submenu_page( 'mgd-share', 'Weitere Plugins', 'Weitere Plugins', 'manage_options', 'mgd-share-plugins', array( $this, 'plugins_page' ) );
+        // Dashboard vom Baukasten: Info, Updates, Weitere Plugins, Installation melden
+        add_submenu_page( 'mgd-share', 'Info und Updates', 'Info und Updates', 'manage_options', 'mgd-share-plugins', array( $this, 'plugins_page' ) );
     }
 
     public function dashboard(): void {
@@ -34,20 +34,21 @@ final class MGD_Share_Admin {
         <table class="form-table"><tr><th>Aktiv</th><td><label><input type="checkbox" name="enabled" value="1" <?php checked( $settings['enabled'] ); ?>> Share-Leiste anzeigen</label></td></tr>
         <tr><th><label for="placement">Position</label></th><td><select id="placement" name="placement"><?php foreach ( array( 'none' => 'Nur Shortcode', 'before-content' => 'Vor dem Inhalt', 'after-content' => 'Nach dem Inhalt' ) as $value => $label ) : ?><option value="<?php echo esc_attr( $value ); ?>" <?php selected( $settings['placement'], $value ); ?>><?php echo esc_html( $label ); ?></option><?php endforeach; ?></select></td></tr>
         <tr><th>Inhaltstypen</th><td><?php foreach ( $post_types as $type ) : ?><label style="display:block"><input type="checkbox" name="post_types[]" value="<?php echo esc_attr( $type->name ); ?>" <?php checked( in_array( $type->name, $settings['post_types'], true ) ); ?>> <?php echo esc_html( $type->labels->singular_name ); ?></label><?php endforeach; ?></td></tr>
-        <tr><th>Funktionen</th><td><?php foreach ( array( 'copy' => 'Link kopieren', 'native' => 'System-Teilen (Web Share API)', 'email' => 'E-Mail', 'whatsapp' => 'WhatsApp', 'linkedin' => 'LinkedIn', 'x' => 'X' ) as $value => $label ) : ?><label style="display:block"><input type="checkbox" name="networks[]" value="<?php echo esc_attr( $value ); ?>" <?php checked( in_array( $value, $settings['networks'], true ) ); ?>> <?php echo esc_html( $label ); ?></label><?php endforeach; ?><p class="description">Externe Plattformen werden nur beim Klick geöffnet.</p></td></tr>
+        <tr><th>Funktionen</th><td><?php foreach ( array( 'copy' => 'Link kopieren', 'native' => 'System-Teilen (Web Share API)', 'email' => 'E-Mail', 'whatsapp' => 'WhatsApp', 'linkedin' => 'LinkedIn' ) as $value => $label ) : ?><label style="display:block"><input type="checkbox" name="networks[]" value="<?php echo esc_attr( $value ); ?>" <?php checked( in_array( $value, $settings['networks'], true ) ); ?>> <?php echo esc_html( $label ); ?></label><?php endforeach; ?><p class="description">Externe Plattformen werden nur beim Klick geöffnet.</p></td></tr>
         <tr><th><label for="label">Beschriftung</label></th><td><input id="label" class="regular-text" name="label" value="<?php echo esc_attr( $settings['label'] ); ?>"></td></tr>
         <tr><th><label for="style">Stil</label></th><td><select id="style" name="style"><option value="rounded" <?php selected( $settings['style'], 'rounded' ); ?>>Abgerundet</option><option value="square" <?php selected( $settings['style'], 'square' ); ?>>Eckig</option><option value="minimal" <?php selected( $settings['style'], 'minimal' ); ?>>Minimal</option></select></td></tr>
         <tr><th><label for="accent">Akzentfarbe</label></th><td><input id="accent" name="accent" type="color" value="<?php echo esc_attr( $settings['accent'] ); ?>"></td></tr></table><?php submit_button( 'Einstellungen speichern' ); ?></form>
         <h2>Shortcode</h2><p><code>[mgd_share]</code></p>
-        <h2>Installation melden</h2><?php echo \Mgd\Share\Kit\Install\Platform\WordPress::settingsHtml( 'mgd-share-wordpress', 'wordpress', MGD_SHARE_VERSION ); // phpcs:ignore -- Baukasten escaped selbst ?></div><?php
+        <p><a href="<?php echo esc_url( admin_url( 'admin.php?page=mgd-share-plugins' ) ); ?>">Info, Updates und Installation melden</a></p></div><?php
     }
 
     public function plugins_page(): void {
         if ( ! current_user_can( 'manage_options' ) ) { wp_die( 'Nicht berechtigt.', '', array( 'response' => 403 ) ); }
         $list = \Mgd\Share\Kit\Platform\WordPress\Setup::recommendations( 'mgd-share-wordpress', 'wordpress', 'plugin-share-wordpress', $this->fallback_plugins() );
-        // Karten nebeneinander, .card von WP ist sonst 520px schmal untereinander
-        ?><div class="wrap"><h1>Weitere Plugins</h1><style>.mgd-kit-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px}.mgd-kit-cards .card{max-width:none;margin:0}</style>
-        <?php echo \Mgd\Share\Kit\Platform\WordPress\RecommendationsView::render( $list ); // phpcs:ignore -- Baukasten escaped selbst ?></div><?php
+        // parent leer = kein eigener Menüpunkt, Lizenz bleibt aus
+        $dash = \Mgd\Share\Kit\Platform\WordPress\Setup::dashboard( 'mgd-share-wordpress', 'wordpress', MGD_SHARE_VERSION, 'MGD Share', MGD_Share_Plugin::$updater, $list, false, '' );
+        if ( null === $dash ) { echo '<div class="wrap"><p>Die Seite konnte gerade nicht geladen werden.</p></div>'; return; }
+        $dash->page();
     }
 
     /** Ersatzliste aus plugin-catalog/plugins.json, falls theme.michael-gahn.de nicht antwortet. */
@@ -66,7 +67,7 @@ final class MGD_Share_Admin {
     public function save(): void {
         if ( ! current_user_can( 'manage_options' ) ) { wp_die( 'Nicht berechtigt.' ); }
         check_admin_referer( 'mgd_share_save' );
-        $allowed_networks = array( 'copy', 'native', 'email', 'whatsapp', 'linkedin', 'x' );
+        $allowed_networks = MGD_Share_Plugin::NETWORKS;
         $allowed_placements = array( 'none', 'before-content', 'after-content' );
         $allowed_styles = array( 'rounded', 'square', 'minimal' );
         $post_types = array_map( 'sanitize_key', (array) ( $_POST['post_types'] ?? array() ) );
