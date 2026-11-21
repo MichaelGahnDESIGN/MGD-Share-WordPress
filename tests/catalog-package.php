@@ -25,5 +25,9 @@ foreach (array('class-provider.php', 'view.php', 'plugins.json') as $name) {
 }
 $bootstrap = $main;
 foreach (glob($runtime . '/includes/*.php') as $file) { $bootstrap .= file_get_contents($file); }
-mgd_catalog_assert((bool) preg_match('/new\s+\\\\?MGD_WordPress_Plugin_Catalog_V4\s*\(/', $bootstrap), 'Versionsfester Einstiegspunkt');
+// ab 0.2.0: Weitere Plugins über den Baukasten, alter GitHub-Updater nicht mehr angemeldet
+mgd_catalog_assert(str_contains($bootstrap, 'RecommendationsView::render('), 'Weitere Plugins über RecommendationsView');
+mgd_catalog_assert(str_contains($bootstrap, "Setup::updater( __FILE__, 'mgd-share-wordpress'"), 'Baukasten-Updater angemeldet');
+mgd_catalog_assert(!str_contains($main, 'MGD_Plugin_Admin_Tools_20261023::register'), 'Alter GitHub-Updater abgeschaltet');
+mgd_catalog_assert(is_file($runtime . '/includes/Kit/Platform/WordPress/Updater.php'), 'Baukasten vorhanden');
 echo "PASS Pluginversion, sieben Katalogeinträge, lokale Icons und vollständige Laufzeitdateien\n";

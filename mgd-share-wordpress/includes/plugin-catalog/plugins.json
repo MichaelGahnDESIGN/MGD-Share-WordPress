@@ -12,6 +12,7 @@
     ],
     "basenames": ["mgd-ai-image-labels/mgd-ai-image-labels.php"],
     "repository": "MGD-AI-Kennzeichnung-WordPress",
+    "slug": "plugin-ki-kennzeichnung-wordpress",
     "tier": "free"
   },
   "MGD-Maintenance-WordPress": {
@@ -27,6 +28,7 @@
     ],
     "basenames": ["mg-maintenance-studio/mg-maintenance-studio.php"],
     "repository": "MGD-Maintenance-WordPress",
+    "slug": "plugin-maintenance-wordpress",
     "tier": "free"
   },
   "MGD-Barrierefrei-WordPress": {
@@ -42,6 +44,7 @@
     ],
     "basenames": ["mgd-barrierefrei-wordpress/mgd-barrierefrei-wordpress.php"],
     "repository": "MGD-Barrierefrei-WordPress",
+    "slug": "plugin-barrierefrei-wordpress",
     "tier": "free"
   },
   "MGD-Share-WordPress": {
@@ -57,6 +60,7 @@
     ],
     "basenames": ["mgd-share-wordpress/mgd-share-wordpress.php"],
     "repository": "MGD-Share-WordPress",
+    "slug": "plugin-share-wordpress",
     "tier": "free"
   },
   "MGD-Notification-WordPress": {
@@ -72,6 +76,7 @@
     ],
     "basenames": ["mgd-notification-center/mgd-notification-center.php"],
     "repository": "MGD-Notification-WordPress",
+    "slug": "plugin-notification-wordpress",
     "tier": "free"
   },
   "MGD_Giveaway_WP-Plugin": {
@@ -87,6 +92,7 @@
     ],
     "basenames": ["mgd-giveaway/mgd-giveaway.php"],
     "repository": "MGD_Giveaway_WP-Plugin",
+    "slug": "plugin-giveaway-wordpress",
     "tier": "free"
   },
   "MGD_WordPress-MCP": {
@@ -102,6 +108,7 @@
     ],
     "basenames": ["mgd-wordpress-mcp/mgd-wordpress-mcp.php"],
     "repository": "MGD_WordPress-MCP",
+    "slug": "plugin-wordpress-mcp",
     "tier": "free"
   }
 }

@@ -33,7 +33,7 @@ MGD Share bringt einen Share-Button mit **Link kopieren**, System-Teilen, E-Mail
 
 ## Installation
 
-1. Lade [**MGD Share 0.1.6**](https://github.com/MichaelGahnDESIGN/MGD-Share-WordPress/releases/download/v0.1.6/mgd-share-wordpress-0.1.6.zip) herunter oder erzeuge lokal ein Paket.
+1. Lade [**MGD Share 0.2.0**](https://github.com/MichaelGahnDESIGN/MGD-Share-WordPress/releases/download/v0.2.0/mgd-share-wordpress-0.2.0.zip) herunter oder erzeuge lokal ein Paket.
 2. Öffne in WordPress **Plugins → Installieren → Plugin hochladen**.
 3. Aktiviere **MGD Share**.
 4. Konfiguriere unter **MGD Share → Einstellungen** Position, Funktionen und Design.
@@ -72,7 +72,7 @@ python3 scripts/check-docs.py
 python3 scripts/build-package.py
 ```
 
-Das installierbare Paket wird unter `dist/mgd-share-wordpress-0.1.6.zip` erzeugt.
+Das installierbare Paket wird unter `dist/mgd-share-wordpress-0.2.0.zip` erzeugt.
 
 ## Sicherheit
 
@@ -109,3 +109,12 @@ Die GitHub-Prüfungen verwenden aktualisierte, gepinnte Abhängigkeiten. Das ver
 ## 0.1.6 – Icons und Hintergründe aus dem Feed (27.10.2026)
 
 Icons und Hintergründe der Karten unter „Weitere Plugins" kommen jetzt aus theme.michael-gahn.de. Der Server holt sie einmal und speichert sie lokal; der Browser lädt nichts extern. Ohne Bild bleibt das mitgelieferte Motiv. Versionen werden ohne führendes „v" angezeigt.
+
+## 0.2.0 – Neuer Update-Weg und neue Liste „Weitere Plugins“ (21.11.2026)
+
+Diese Version ist eine Brückenversion. Deine Einstellungen bleiben genau so, wie sie sind.
+
+- **Updates:** WordPress zeigt neue Versionen jetzt über theme.michael-gahn.de an. Vor der Installation wird geprüft, ob die Datei vollständig und unverändert ist (Größe und Prüfsumme). Der alte Update-Weg über GitHub ist abgeschaltet.
+- **Automatische Updates** bleiben aus, bis du sie selbst unter „Plugins“ einschaltest.
+- **Weitere Plugins:** Die Seite zeigt jetzt einfache Karten mit Name, Beschreibung, Version und dem Link „Mehr erfahren“. Antwortet der Server nicht, siehst du eine mitgelieferte Liste.
+- **Installation melden:** Unter „MGD Share → Einstellungen“ gibt es einen Schalter. Ist er an, meldet sich das Plugin höchstens einmal am Tag bei theme.michael-gahn.de (Plugin-Name, Version, Shopsystem, Domain, zufällige Installations-ID). Du kannst ihn jederzeit abschalten.

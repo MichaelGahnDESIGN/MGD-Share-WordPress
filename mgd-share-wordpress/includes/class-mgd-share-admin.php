@@ -8,12 +8,13 @@ final class MGD_Share_Admin {
     public function register(): void {
         add_action( 'admin_menu', array( $this, 'menu' ) );
         add_action( 'admin_post_mgd_share_save', array( $this, 'save' ) );
-        ( new MGD_WordPress_Plugin_Catalog_V4() )->register( 'mgd-share' );
     }
 
     public function menu(): void {
         add_menu_page( 'MGD Share', 'MGD Share', 'manage_options', 'mgd-share', array( $this, 'dashboard' ), 'dashicons-share', 58 );
         add_submenu_page( 'mgd-share', 'Einstellungen', 'Einstellungen', 'manage_options', 'mgd-share-settings', array( $this, 'settings_page' ) );
+        // Weitere Plugins jetzt über RecommendationsView vom Baukasten
+        add_submenu_page( 'mgd-share', 'Weitere Plugins', 'Weitere Plugins', 'manage_options', 'mgd-share-plugins', array( $this, 'plugins_page' ) );
     }
 
     public function dashboard(): void {
@@ -37,7 +38,29 @@ final class MGD_Share_Admin {
         <tr><th><label for="label">Beschriftung</label></th><td><input id="label" class="regular-text" name="label" value="<?php echo esc_attr( $settings['label'] ); ?>"></td></tr>
         <tr><th><label for="style">Stil</label></th><td><select id="style" name="style"><option value="rounded" <?php selected( $settings['style'], 'rounded' ); ?>>Abgerundet</option><option value="square" <?php selected( $settings['style'], 'square' ); ?>>Eckig</option><option value="minimal" <?php selected( $settings['style'], 'minimal' ); ?>>Minimal</option></select></td></tr>
         <tr><th><label for="accent">Akzentfarbe</label></th><td><input id="accent" name="accent" type="color" value="<?php echo esc_attr( $settings['accent'] ); ?>"></td></tr></table><?php submit_button( 'Einstellungen speichern' ); ?></form>
-        <h2>Shortcode</h2><p><code>[mgd_share]</code></p></div><?php
+        <h2>Shortcode</h2><p><code>[mgd_share]</code></p>
+        <h2>Installation melden</h2><?php echo \Mgd\Share\Kit\Install\Platform\WordPress::settingsHtml( 'mgd-share-wordpress', 'wordpress', MGD_SHARE_VERSION ); // phpcs:ignore -- Baukasten escaped selbst ?></div><?php
+    }
+
+    public function plugins_page(): void {
+        if ( ! current_user_can( 'manage_options' ) ) { wp_die( 'Nicht berechtigt.', '', array( 'response' => 403 ) ); }
+        $list = \Mgd\Share\Kit\Platform\WordPress\Setup::recommendations( 'mgd-share-wordpress', 'wordpress', 'plugin-share-wordpress', $this->fallback_plugins() );
+        // Karten nebeneinander, .card von WP ist sonst 520px schmal untereinander
+        ?><div class="wrap"><h1>Weitere Plugins</h1><style>.mgd-kit-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px}.mgd-kit-cards .card{max-width:none;margin:0}</style>
+        <?php echo \Mgd\Share\Kit\Platform\WordPress\RecommendationsView::render( $list ); // phpcs:ignore -- Baukasten escaped selbst ?></div><?php
+    }
+
+    /** Ersatzliste aus plugin-catalog/plugins.json, falls theme.michael-gahn.de nicht antwortet. */
+    private function fallback_plugins(): array {
+        $raw = file_get_contents( MGD_SHARE_DIR . 'includes/plugin-catalog/plugins.json' );
+        $data = is_string( $raw ) ? json_decode( $raw, true ) : null;
+        $out = array();
+        foreach ( is_array( $data ) ? $data : array() as $row ) {
+            if ( is_array( $row ) && ! empty( $row['slug'] ) ) {
+                $out[] = array( 'slug' => (string) $row['slug'], 'name' => (string) ( $row['name'] ?? '' ), 'description' => (string) ( $row['description'] ?? '' ), 'version' => '' );
+            }
+        }
+        return $out;
     }
 
     public function save(): void {
