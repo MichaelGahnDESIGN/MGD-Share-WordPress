@@ -3,18 +3,31 @@ defined( 'ABSPATH' ) || exit;
 
 /** Administrationsseiten für Darstellung, Funktionen und datenschutzrelevante Hinweise. */
 final class MGD_Share_Admin {
-    public function __construct( private MGD_Share_Privacy_Scanner $scanner ) {}
+    private string $settings_hook = '';
+
+    public function __construct( private MGD_Share_Privacy_Scanner $scanner, private MGD_Share_Renderer $renderer ) {}
 
     public function register(): void {
         add_action( 'admin_menu', array( $this, 'menu' ) );
         add_action( 'admin_post_mgd_share_save', array( $this, 'save' ) );
+        add_action( 'admin_enqueue_scripts', array( $this, 'assets' ) );
     }
 
     public function menu(): void {
         add_menu_page( 'MGD Share', 'MGD Share', 'manage_options', 'mgd-share', array( $this, 'dashboard' ), 'dashicons-share', 58 );
-        add_submenu_page( 'mgd-share', 'Einstellungen', 'Einstellungen', 'manage_options', 'mgd-share-settings', array( $this, 'settings_page' ) );
+        $this->settings_hook = (string) add_submenu_page( 'mgd-share', 'Einstellungen', 'Einstellungen', 'manage_options', 'mgd-share-settings', array( $this, 'settings_page' ) );
         // Dashboard vom Baukasten: Info, Updates, Weitere Plugins, Installation melden
         add_submenu_page( 'mgd-share', 'Info und Updates', 'Info und Updates', 'manage_options', 'mgd-share-plugins', array( $this, 'plugins_page' ) );
+    }
+
+    // CSS/JS nur auf der Einstellungsseite
+    public function assets( string $hook ): void {
+        if ( $hook !== $this->settings_hook ) { return; }
+        $this->renderer->register_assets();
+        wp_enqueue_style( 'mgd-share' );
+        wp_enqueue_script( 'mgd-share' );
+        wp_enqueue_style( 'mgd-share-admin', MGD_SHARE_URL . 'assets/admin.css', array( 'mgd-share' ), MGD_SHARE_VERSION );
+        wp_enqueue_script( 'mgd-share-admin', MGD_SHARE_URL . 'assets/admin.js', array( 'jquery-ui-sortable', 'mgd-share' ), MGD_SHARE_VERSION, true );
     }
 
     public function dashboard(): void {
@@ -29,17 +42,27 @@ final class MGD_Share_Admin {
     }
 
     public function settings_page(): void {
-        $settings = MGD_Share_Plugin::settings(); $post_types = get_post_types( array( 'public' => true ), 'objects' );
-        ?><div class="wrap"><h1>MGD Share Einstellungen</h1><form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>"><?php wp_nonce_field( 'mgd_share_save' ); ?><input type="hidden" name="action" value="mgd_share_save">
-        <table class="form-table"><tr><th>Aktiv</th><td><label><input type="checkbox" name="enabled" value="1" <?php checked( $settings['enabled'] ); ?>> Share-Leiste anzeigen</label></td></tr>
-        <tr><th><label for="placement">Position</label></th><td><select id="placement" name="placement"><?php foreach ( array( 'none' => 'Nur Shortcode', 'before-content' => 'Vor dem Inhalt', 'after-content' => 'Nach dem Inhalt' ) as $value => $label ) : ?><option value="<?php echo esc_attr( $value ); ?>" <?php selected( $settings['placement'], $value ); ?>><?php echo esc_html( $label ); ?></option><?php endforeach; ?></select></td></tr>
-        <tr><th>Inhaltstypen</th><td><?php foreach ( $post_types as $type ) : ?><label style="display:block"><input type="checkbox" name="post_types[]" value="<?php echo esc_attr( $type->name ); ?>" <?php checked( in_array( $type->name, $settings['post_types'], true ) ); ?>> <?php echo esc_html( $type->labels->singular_name ); ?></label><?php endforeach; ?></td></tr>
-        <tr><th>Funktionen</th><td><?php foreach ( array( 'copy' => 'Link kopieren', 'native' => 'System-Teilen (Web Share API)', 'email' => 'E-Mail', 'whatsapp' => 'WhatsApp', 'linkedin' => 'LinkedIn' ) as $value => $label ) : ?><label style="display:block"><input type="checkbox" name="networks[]" value="<?php echo esc_attr( $value ); ?>" <?php checked( in_array( $value, $settings['networks'], true ) ); ?>> <?php echo esc_html( $label ); ?></label><?php endforeach; ?><p class="description">Externe Plattformen werden nur beim Klick geöffnet.</p></td></tr>
-        <tr><th><label for="label">Beschriftung</label></th><td><input id="label" class="regular-text" name="label" value="<?php echo esc_attr( $settings['label'] ); ?>"></td></tr>
-        <tr><th><label for="style">Stil</label></th><td><select id="style" name="style"><option value="rounded" <?php selected( $settings['style'], 'rounded' ); ?>>Abgerundet</option><option value="square" <?php selected( $settings['style'], 'square' ); ?>>Eckig</option><option value="minimal" <?php selected( $settings['style'], 'minimal' ); ?>>Minimal</option></select></td></tr>
-        <tr><th><label for="accent">Akzentfarbe</label></th><td><input id="accent" name="accent" type="color" value="<?php echo esc_attr( $settings['accent'] ); ?>"></td></tr></table><?php submit_button( 'Einstellungen speichern' ); ?></form>
-        <h2>Shortcode</h2><p><code>[mgd_share]</code></p>
-        <p><a href="<?php echo esc_url( admin_url( 'admin.php?page=mgd-share-plugins' ) ); ?>">Info, Updates und Installation melden</a></p></div><?php
+        if ( ! current_user_can( 'manage_options' ) ) { wp_die( 'Nicht berechtigt.', '', array( 'response' => 403 ) ); }
+        $s = MGD_Share_Plugin::settings();
+        $post_types = get_post_types( array( 'public' => true ), 'objects' );
+        // aktive zuerst in gespeicherter Reihenfolge, dann der Rest
+        $order = array_values( array_unique( array_merge( $s['networks'], MGD_Share_Plugin::NETWORKS ) ) );
+        include MGD_SHARE_DIR . 'templates/admin-settings.php';
+    }
+
+    /** Auswahl als Kachel-Knöpfe (Radio). */
+    public static function choice( string $key, array $s ): void {
+        echo '<div class="mgd-sa-choices" role="radiogroup">';
+        foreach ( MGD_Share_Options::LABELS[ $key ] as $value => $label ) {
+            printf(
+                '<label class="mgd-sa-choice"><input type="radio" name="%1$s" value="%2$s" %3$s><span>%4$s</span></label>',
+                esc_attr( $key ),
+                esc_attr( $value ),
+                checked( $s[ $key ], $value, false ),
+                esc_html( $label )
+            );
+        }
+        echo '</div>';
     }
 
     public function plugins_page(): void {
@@ -67,21 +90,13 @@ final class MGD_Share_Admin {
     public function save(): void {
         if ( ! current_user_can( 'manage_options' ) ) { wp_die( 'Nicht berechtigt.' ); }
         check_admin_referer( 'mgd_share_save' );
-        $allowed_networks = MGD_Share_Plugin::NETWORKS;
-        $allowed_placements = array( 'none', 'before-content', 'after-content' );
-        $allowed_styles = array( 'rounded', 'square', 'minimal' );
-        $post_types = array_map( 'sanitize_key', (array) ( $_POST['post_types'] ?? array() ) );
-        $networks = array_values( array_intersect( $allowed_networks, array_map( 'sanitize_key', (array) ( $_POST['networks'] ?? array() ) ) ) );
-        update_option( 'mgd_share_settings', array(
-            'enabled' => ! empty( $_POST['enabled'] ),
-            'placement' => in_array( sanitize_key( $_POST['placement'] ?? '' ), $allowed_placements, true ) ? sanitize_key( $_POST['placement'] ) : 'none',
-            'post_types' => $post_types,
-            'networks' => $networks,
-            'label' => sanitize_text_field( wp_unslash( $_POST['label'] ?? 'Teilen' ) ),
-            'style' => in_array( sanitize_key( $_POST['style'] ?? '' ), $allowed_styles, true ) ? sanitize_key( $_POST['style'] ) : 'rounded',
-            'accent' => sanitize_hex_color( $_POST['accent'] ?? '' ) ?: '#1d4ed8',
-            'show_label' => true,
-        ) );
+        $raw = wp_unslash( $_POST ); // phpcs:ignore -- wird in sanitize() Feld für Feld geprüft
+        $raw = is_array( $raw ) ? $raw : array();
+        // Checkboxen fehlen im POST, wenn aus
+        foreach ( array( 'enabled', 'show_label', 'mobile_bar' ) as $flag ) { $raw[ $flag ] = ! empty( $raw[ $flag ] ); }
+        $raw['networks'] = (array) ( $raw['networks'] ?? array() );
+        $raw['post_types'] = (array) ( $raw['post_types'] ?? array() );
+        update_option( 'mgd_share_settings', MGD_Share_Options::sanitize( $raw ) );
         wp_safe_redirect( admin_url( 'admin.php?page=mgd-share-settings&updated=1' ) ); exit;
     }
 }

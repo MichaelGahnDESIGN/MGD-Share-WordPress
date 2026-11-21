@@ -1,0 +1,56 @@
+/* MGD Share Einstellungen - Admin Layout */
+.mgd-sa{--sa-line:#dcdcde;--sa-ink:#1d2327;--sa-soft:#f6f7f7;--sa-hi:#2271b1;max-width:1400px}
+.mgd-sa-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(320px,440px);gap:20px;align-items:start;margin-top:16px}
+.mgd-sa-side{position:sticky;top:46px;display:grid;gap:16px}
+.mgd-sa-card{background:#fff;border:1px solid var(--sa-line);border-radius:12px;padding:18px 20px;margin:0 0 16px}
+.mgd-sa-side .mgd-sa-card{margin:0}
+.mgd-sa-card h2{margin:0 0 12px;font-size:16px}
+.mgd-sa-card h3{margin:18px 0 8px;font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.04em;color:#50575e}
+
+/* Schnellstart Vorlagen */
+.mgd-sa-presets{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:12px;padding:12px 16px;background:linear-gradient(120deg,#f0f6fc,#fdf2f8);border:1px solid var(--sa-line);border-radius:12px}
+.mgd-sa-presets__title{font-weight:600;margin-right:4px}
+.mgd-sa-presets .button{border-radius:999px}
+
+/* Kachel-Auswahl */
+.mgd-sa-choices{display:flex;flex-wrap:wrap;gap:6px}
+.mgd-sa-choice{position:relative}
+.mgd-sa-choice input{position:absolute;opacity:0;inset:0;margin:0;cursor:pointer}
+.mgd-sa-choice span{display:inline-flex;align-items:center;min-height:36px;padding:0 14px;border:1px solid var(--sa-line);border-radius:8px;background:var(--sa-soft);color:var(--sa-ink);transition:background-color .15s,border-color .15s,color .15s}
+.mgd-sa-choice input:checked+span{background:var(--sa-hi);border-color:var(--sa-hi);color:#fff}
+.mgd-sa-choice input:focus-visible+span{outline:2px solid var(--sa-hi);outline-offset:2px}
+.mgd-sa-choice:hover span{border-color:var(--sa-hi)}
+
+.mgd-sa-switch{display:flex;align-items:center;gap:8px;margin:8px 0;font-weight:500}
+.mgd-sa-checks{display:flex;flex-wrap:wrap;gap:6px 18px}
+
+/* Netzwerk-Liste */
+.mgd-sa-networks{margin:12px 0 0;display:grid;gap:6px}
+.mgd-sa-network{display:flex;align-items:center;gap:10px;margin:0;padding:6px 10px;background:#fff;border:1px solid var(--sa-line);border-radius:10px}
+.mgd-sa-network.ui-sortable-helper{box-shadow:0 10px 24px -10px rgba(0,0,0,.35)}
+.mgd-sa-network.ui-sortable-placeholder{visibility:visible!important;background:var(--sa-soft);border-style:dashed}
+.mgd-sa-network__grip{cursor:grab;color:#8c8f94}
+.mgd-sa-network label{display:flex;align-items:center;gap:10px;flex:1;min-height:32px}
+.mgd-sa-network__icon{display:inline-grid;place-items:center;width:30px;height:30px;border-radius:8px;background:var(--brand);color:#fff}
+.mgd-sa-network__icon svg{width:17px;height:17px}
+.mgd-sa-network:has(input:not(:checked)) .mgd-sa-network__icon{filter:grayscale(1);opacity:.45}
+.mgd-sa-network__move .button-link{padding:4px 6px;text-decoration:none;color:#50575e}
+
+/* Farben */
+.mgd-sa-color{display:flex;flex-wrap:wrap;align-items:center;gap:8px}
+.mgd-sa-color input[type=color]{width:52px;height:36px;padding:2px;border:1px solid var(--sa-line);border-radius:8px;background:#fff;cursor:pointer}
+.mgd-sa-swatch{width:28px;height:28px;border:2px solid #fff;border-radius:50%;box-shadow:0 0 0 1px var(--sa-line);cursor:pointer}
+.mgd-sa-swatch:hover,.mgd-sa-swatch:focus-visible{box-shadow:0 0 0 2px var(--sa-hi)}
+
+/* Vorschau */
+.mgd-sa-preview__head{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.mgd-sa-preview__head h2{margin:0}
+.mgd-sa-preview__bg{display:inline-flex;border:1px solid var(--sa-line);border-radius:999px;overflow:hidden}
+.mgd-sa-preview__bg button{border:0;background:#fff;padding:4px 12px;cursor:pointer}
+.mgd-sa-preview__bg button.is-active{background:var(--sa-ink);color:#fff}
+.mgd-sa-preview__stage{margin-top:14px;padding:22px 18px;border-radius:10px;background:#fbfbfc;color:#1f2937;border:1px solid #ececef;transition:background-color .2s,color .2s}
+.mgd-sa-preview__stage.is-dark{background:#111827;color:#e5e7eb;border-color:#111827}
+.mgd-sa-preview__dummy{margin:0 0 4px;color:inherit;opacity:.7}
+.mgd-sa-preview__stage .mgd-share{margin:12px 0 0}
+
+@media (max-width:1100px){.mgd-sa-grid{grid-template-columns:1fr}.mgd-sa-side{position:static;order:-1}}

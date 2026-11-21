@@ -26,14 +26,16 @@ MGD Share bringt einen Share-Button mit **Link kopieren**, System-Teilen, E-Mail
 | --- | --- |
 | Link teilen | Kopieren in die Zwischenablage mit zugänglicher Rückmeldung |
 | System-Funktion | Web Share API auf unterstützten Geräten |
-| Externe Ziele | E-Mail, WhatsApp und LinkedIn – erst nach Klick |
-| Darstellung | Vor/Nach Inhalt oder frei über Shortcode, drei Stile und Akzentfarbe |
+| Externe Ziele | E-Mail, WhatsApp, LinkedIn, Facebook, Telegram, Pinterest, Reddit, XING, Bluesky, Threads und Drucken – erst nach Klick |
+| Darstellung | 4 Formen, 4 Stile, 3 Größen, Icon und/oder Text, Markenfarben oder eigene Akzentfarbe, Effekte beim Drüberfahren |
+| Position | Vor/nach dem Inhalt, schwebend am Rand, als Leiste unten am Handy oder frei über Shortcode |
+| Einstellungen | Live-Vorschau, 6 Vorlagen zum Schnellstart, Reihenfolge per Ziehen |
 | Dashboard | Datenschutz-Check und Erkennung bekannter Datenschutz-Plugins |
 | Datenschutz | Keine Social-Media-Skripte, Cookies oder Tracking-Aufrufe durch MGD Share |
 
 ## Installation
 
-1. Lade [**MGD Share 0.2.0**](https://github.com/MichaelGahnDESIGN/MGD-Share-WordPress/releases/download/v0.2.0/mgd-share-wordpress-0.2.0.zip) herunter oder erzeuge lokal ein Paket.
+1. Lade [**MGD Share 0.3.0**](https://github.com/MichaelGahnDESIGN/MGD-Share-WordPress/releases/download/v0.3.0/mgd-share-wordpress-0.3.0.zip) herunter oder erzeuge lokal ein Paket.
 2. Öffne in WordPress **Plugins → Installieren → Plugin hochladen**.
 3. Aktiviere **MGD Share**.
 4. Konfiguriere unter **MGD Share → Einstellungen** Position, Funktionen und Design.
@@ -43,6 +45,14 @@ Die automatische Position kann vor oder nach dem Inhalt erfolgen. Für Block-Edi
 ```text
 [mgd_share]
 ```
+
+Du kannst im Shortcode einzelne Einstellungen ändern. Beispiel: bunte Pillen nur mit WhatsApp, E-Mail und Link kopieren:
+
+```text
+[mgd_share shape="pill" variant="solid" color_mode="brand" networks="whatsapp,email,copy"]
+```
+
+Mögliche Angaben: `shape` (rounded, square, pill, circle), `variant` (solid, outline, soft, ghost), `color_mode` (accent, brand, mono), `size` (s, m, l), `display` (icon-text, icon, text), `align` (left, center, right, spread), `hover` (lift, grow, glow, none), `container` (card, plain), `accent` (Farbe wie #c8161a), `label`, `show_label` (true/false) und `networks` (Liste mit Komma).
 
 ## Datenschutz-Dashboard
 
@@ -72,7 +82,7 @@ python3 scripts/check-docs.py
 python3 scripts/build-package.py
 ```
 
-Das installierbare Paket wird unter `dist/mgd-share-wordpress-0.2.0.zip` erzeugt.
+Das installierbare Paket wird unter `dist/mgd-share-wordpress-0.3.0.zip` erzeugt.
 
 ## Sicherheit
 
@@ -119,3 +129,18 @@ Diese Version ist eine Brückenversion. Deine Einstellungen bleiben genau so, wi
 - **Neue Seite „Info und Updates“:** Unter „MGD Share“ findest du jetzt eine Seite mit Version, Update-Stand, weiteren Plugins und dem Schalter „Installation melden“. Die weiteren Plugins erscheinen als einfache Karten mit Name, Beschreibung, Version und dem Link „Mehr erfahren“. Antwortet der Server nicht, siehst du eine mitgelieferte Liste.
 - **X/Twitter als Ziel entfernt.** X kann nicht mehr ausgewählt werden. War X in deinen Einstellungen aktiv, wird es beim Update entfernt. Alle anderen Ziele und das System-Teilen des Browsers bleiben, wie sie sind.
 - **Installation melden:** Auf der Seite „Info und Updates“ gibt es einen Schalter. Ist er an, meldet sich das Plugin höchstens einmal am Tag bei theme.michael-gahn.de (Plugin-Name, Version, Shopsystem, Domain, zufällige Installations-ID). Du kannst ihn jederzeit abschalten.
+
+## 0.3.0 – Mehr Design und mehr Netzwerke (21.11.2026)
+
+Deine bisherigen Einstellungen bleiben erhalten. Die Leiste sieht nach dem Update genauso aus wie vorher, bis du etwas änderst.
+
+- **Neue Einstellungsseite mit Live-Vorschau:** Jede Änderung siehst du sofort, auf hellem oder dunklem Hintergrund.
+- **Schnellstart-Vorlagen:** Klassisch, Bunte Pillen, Icon-Kreise, Sanft, Minimal und Kräftig eckig.
+- **Aussehen:** 4 Formen (abgerundet, eckig, Pille, Kreis), 4 Stile (gefüllt, Rahmen, sanft getönt, nur Icon/Text), 3 Größen, Icon und/oder Text, Effekte beim Drüberfahren, mit oder ohne Box, Ausrichtung.
+- **Farben:** eine Akzentfarbe, die Markenfarben der Netzwerke oder schlicht grau. Die Schrift auf gefüllten Buttons wird automatisch gut lesbar gewählt.
+- **Neue Ziele:** Facebook, Telegram, Pinterest, Reddit, XING, Bluesky, Threads und Drucken. Alle mit Logo, alle lokal im Plugin. Vor dem Klick wird nichts von außen geladen.
+- **Reihenfolge:** Buttons per Ziehen oder mit den Pfeilen sortieren.
+- **Neue Positionen:** vor und nach dem Inhalt gleichzeitig, schwebend am linken oder rechten Rand und als Leiste unten am Handy.
+- **Link kopieren:** Der Button zeigt kurz „Kopiert!“ mit Häkchen.
+- **Shortcode mit eigenen Werten**, zum Beispiel `[mgd_share shape="pill" networks="whatsapp,copy"]`.
+
