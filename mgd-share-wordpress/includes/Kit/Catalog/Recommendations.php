@@ -20,6 +20,8 @@ final class Recommendations
     public const MAX_ITEMS = 80;
     public const MAX_BYTES = 524288;
     public const SLUG_RE = '/^[a-z0-9]+(?:-[a-z0-9]+)*$/D';
+    public const REPO_RE = '/^[A-Za-z0-9_.-]{1,100}$/D';
+    public const REPO_FIELDS = ['repo', 'repository', 'github'];
 
     // Kit-Shopsystem > Feed-Name + erlaubte platform-Werte im alten Feed
     public const PLATFORMS = [
@@ -34,8 +36,12 @@ final class Recommendations
     private readonly string $feed;
     /** @var list<string> */
     private readonly array $allowed;
+    private readonly string $selfRepo;
 
-    /** @param list<array<string,mixed>> $fallback mitgelieferte Liste (slug, name, description, version) */
+    /**
+     * @param list<array<string,mixed>> $fallback mitgelieferte Liste (slug, name, description, version)
+     * @param string $selfRepo eigenes GitHub-Repo, z. B. MGD-Share-WordPress
+     */
     public function __construct(
         private readonly Transport $http,
         private readonly Store $store,
@@ -43,12 +49,14 @@ final class Recommendations
         private readonly string $selfSlug,
         private readonly array $fallback = [],
         ?\Closure $clock = null,
+        string $selfRepo = '',
     ) {
         if (!isset(self::PLATFORMS[$platform])) {
             throw new \InvalidArgumentException('Shopsystem ungültig.');
         }
         [$this->feed, $this->allowed] = self::PLATFORMS[$platform];
         $this->clock = $clock ?? static fn (): int => time();
+        $this->selfRepo = preg_match(self::REPO_RE, $selfRepo) === 1 ? strtolower($selfRepo) : '';
     }
 
     /**
@@ -159,7 +167,7 @@ final class Recommendations
         $slug = $row['slug'] ?? null;
         $name = is_string($row['name'] ?? null) ? Text::plain($row['name'], 120) : '';
         // eigenes Plugin raus
-        if (!is_string($slug) || strlen($slug) > 100 || preg_match(self::SLUG_RE, $slug) !== 1 || $slug === $this->selfSlug || $name === '') {
+        if (!is_string($slug) || strlen($slug) > 100 || preg_match(self::SLUG_RE, $slug) !== 1 || $slug === $this->selfSlug || $name === '' || $this->isSelfRepo($row)) {
             return null;
         }
 
@@ -170,6 +178,22 @@ final class Recommendations
             'version' => is_string($row['version'] ?? null) ? ltrim(Text::plain($row['version'], 30), 'vV') : '',
             'url' => self::DETAILS_PREFIX . $slug,
         ];
+    }
+
+    // alte Listen ohne Katalog-Kennung > eigenes Plugin übers Repo erkennen
+    private function isSelfRepo(array $row): bool
+    {
+        if ($this->selfRepo === '') {
+            return false;
+        }
+        foreach (self::REPO_FIELDS as $f) {
+            $v = is_string($row[$f] ?? null) ? strtolower(rtrim(trim($row[$f]), '/')) : '';
+            if ($v !== '' && ($v === $this->selfRepo || str_ends_with($v, '/' . $this->selfRepo))) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private function fallbackItems(): array

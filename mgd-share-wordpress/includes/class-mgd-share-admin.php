@@ -44,7 +44,7 @@ final class MGD_Share_Admin {
 
     public function plugins_page(): void {
         if ( ! current_user_can( 'manage_options' ) ) { wp_die( 'Nicht berechtigt.', '', array( 'response' => 403 ) ); }
-        $list = \Mgd\Share\Kit\Platform\WordPress\Setup::recommendations( 'mgd-share-wordpress', 'wordpress', 'plugin-share-wordpress', $this->fallback_plugins() );
+        $list = \Mgd\Share\Kit\Platform\WordPress\Setup::recommendations( 'mgd-share-wordpress', 'wordpress', 'plugin-share-wordpress', $this->fallback_plugins(), 'MGD-Share-WordPress' );
         // parent leer = kein eigener Menüpunkt, Lizenz bleibt aus
         $dash = \Mgd\Share\Kit\Platform\WordPress\Setup::dashboard( 'mgd-share-wordpress', 'wordpress', MGD_SHARE_VERSION, 'MGD Share', MGD_Share_Plugin::$updater, $list, false, '' );
         if ( null === $dash ) { echo '<div class="wrap"><p>Die Seite konnte gerade nicht geladen werden.</p></div>'; return; }

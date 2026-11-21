@@ -14,14 +14,18 @@ final class Setup
 {
     public const PRODUCT_RE = '/^[a-z0-9]+(?:-[a-z0-9]+)*$/D';
 
-    /** Updater + Hinweis anmelden. $platform = wordpress oder woocommerce */
-    public static function updater(string $pluginFile, string $product, string $platform, string $version, string $pluginName): ?Updater
+    /**
+     * Updater + Hinweis anmelden, startet auch den Install-Client (WordPress::boot) mit. $platform = wordpress oder woocommerce
+     * $settingsUrl leer = Kit-Dashboard unter Einstellungen, sonst eigene Seite (z. B. Setup::dashboardUrl($product, 'mgd-share'))
+     */
+    public static function updater(string $pluginFile, string $product, string $platform, string $version, string $pluginName, string $settingsUrl = ''): ?Updater
     {
         try {
             $c = WordPress::client($product, $platform, $version);
             if ($c === null) {
                 return null;
             }
+            self::boot($pluginFile, $product, $platform, $version, $settingsUrl);
             $u = new Updater($c, \plugin_basename($pluginFile), $version, $pluginName);
             $u->register();
             NoticeView::register($u, $pluginName);
@@ -32,11 +36,58 @@ final class Setup
         }
     }
 
+    /** Install-Client starten, nur 1x pro Produkt (updater() macht das schon) */
+    public static function boot(string $pluginFile, string $product, string $platform, string $version, string $settingsUrl = ''): bool
+    {
+        try {
+            if (preg_match(self::PRODUCT_RE, $product) !== 1) {
+                return false;
+            }
+
+            return InstallBoot::start($pluginFile, $product, $platform, $version, $settingsUrl !== '' ? $settingsUrl : self::dashboardUrl($product));
+        } catch (\Throwable) {
+            return false;
+        }
+    }
+
+    /** Adresse der Kit-Seite. $parent wie bei dashboard() */
+    public static function dashboardUrl(string $product, string $parent = 'options-general.php'): string
+    {
+        $page = 'mgd-kit-' . $product;
+        $path = str_ends_with($parent, '.php') && preg_match('/^[a-z-]+\.php$/D', $parent) === 1 ? $parent : 'admin.php';
+
+        return (string) \admin_url($path . '?page=' . rawurlencode($page));
+    }
+
+    /**
+     * Alte Caches/Optionen vom vorherigen Updater löschen, 1x pro Version bei admin_init
+     * Namen mit mgd_ vorne, * am Ende = alles mit diesem Anfang (z. B. mgd_admin_release_*)
+     * @param list<string> $names
+     */
+    public static function cleanupLegacy(string $product, string $version, array $names): void
+    {
+        if (preg_match(self::PRODUCT_RE, $product) !== 1 || $names === []) {
+            return;
+        }
+        $opt = 'mgd_kit_cleanup_' . str_replace('-', '_', $product);
+        \add_action('admin_init', static function () use ($opt, $version, $names): void {
+            try {
+                if (\get_option($opt, '') === $version) {
+                    return;
+                }
+                LegacyCleanup::run($names, $GLOBALS['wpdb'] ?? null);
+                \update_option($opt, $version, false);
+            } catch (\Throwable) {
+            }
+        });
+    }
+
     /**
      * Liste "Weitere Plugins". $selfSlug = Katalog-Kennung des eigenen Plugins (wird ausgeblendet)
+     * $selfRepo = eigenes GitHub-Repo (z. B. MGD-Share-WordPress), blendet sich auch in alten Listen ohne Kennung aus
      * @param list<array<string,mixed>> $fallback mitgelieferte Liste
      */
-    public static function recommendations(string $product, string $platform, string $selfSlug, array $fallback = []): ?Recommendations
+    public static function recommendations(string $product, string $platform, string $selfSlug, array $fallback = [], string $selfRepo = ''): ?Recommendations
     {
         try {
             if (preg_match(self::PRODUCT_RE, $product) !== 1) {
@@ -51,7 +102,7 @@ final class Setup
                 },
             );
 
-            return new Recommendations(new CurlTransport('MGDKit/1.0 (' . $platform . ')'), $store, $platform, $selfSlug, $fallback);
+            return new Recommendations(new CurlTransport('MGDKit/1.0 (' . $platform . ')'), $store, $platform, $selfSlug, $fallback, null, $selfRepo);
         } catch (\Throwable) {
             return null;
         }
@@ -84,7 +135,7 @@ final class Setup
 
     /**
      * Admin-Seite mit allen Bereichen. $parent = options-general.php (Einstellungen) oder eigener Menü-Slug, '' = kein Menüpunkt
-     * Speichern von "Installation melden" läuft wie bisher über WordPress::boot()
+     * Speichern von "Installation melden" läuft über WordPress::boot(), das startet updater() bzw. boot() schon
      */
     public static function dashboard(
         string $product,

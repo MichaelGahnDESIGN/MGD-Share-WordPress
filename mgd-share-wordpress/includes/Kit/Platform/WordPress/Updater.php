@@ -22,6 +22,7 @@ final class Updater
 
     private readonly string $slug;
     private readonly string $cacheKey;
+    private readonly string $okKey;
 
     /** @param string $basename plugin_basename(__FILE__), z. B. mgd-share/mgd-share.php */
     public function __construct(
@@ -36,6 +37,7 @@ final class Updater
         }
         $this->slug = dirname($basename);
         $this->cacheKey = 'mgd_kit_upd_' . str_replace('-', '_', $client->product());
+        $this->okKey = 'mgd_kit_upd_ok_' . str_replace('-', '_', $client->product());
     }
 
     public function register(): void
@@ -64,11 +66,25 @@ final class Updater
                 $raw = (string) ($this->client->fetchUpdates() ?? '');
                 $ok = $this->parse($raw) !== null;
                 \set_site_transient($this->cacheKey, $ok ? $raw : '', $ok ? self::CACHE_OK : self::CACHE_FAIL);
+                // merken: gab schon mal gültige Daten (Dashboard unterscheidet "noch keine Datei" von Fehler)
+                if ($ok && \get_option($this->okKey, '') !== '1') {
+                    \update_option($this->okKey, '1', false);
+                }
             }
 
             return $this->parse($raw);
         } catch (\Throwable) {
             return null;
+        }
+    }
+
+    /** true = früher schon mal gültige Update-Daten bekommen */
+    public function hadData(): bool
+    {
+        try {
+            return \get_option($this->okKey, '') === '1';
+        } catch (\Throwable) {
+            return false;
         }
     }
 
@@ -110,7 +126,7 @@ final class Updater
         return $transient;
     }
 
-    /** "Details anzeigen" */
+    /** "Details anzeigen". Ohne gültige Update-Daten bleibt $result wie er ist */
     public function details(mixed $result, mixed $action, mixed $args): mixed
     {
         if ($action !== 'plugin_information' || !is_object($args) || ($args->slug ?? '') !== $this->slug) {

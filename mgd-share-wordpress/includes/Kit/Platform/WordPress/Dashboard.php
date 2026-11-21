@@ -13,6 +13,7 @@ use Mgd\Share\Kit\Support\Text;
 final class Dashboard
 {
     public const CSS = __DIR__ . '/assets/kit-admin.css';
+    public const NO_DATA = 'Für dieses Plugin gibt es noch keine Update-Informationen. Das ist normal, solange noch keine neue Version veröffentlicht ist.';
 
     /** @param \Closure():string|null $installHtml liefert das Install-Client Formular (WordPress::settingsHtml) */
     public function __construct(
@@ -96,7 +97,10 @@ final class Dashboard
         }
         $u = $this->updater->info();
         if ($u === null) {
-            return '<p>Die Update-Prüfung hat gerade nicht geklappt. WordPress versucht es später noch einmal.</p>';
+            // nie gültige Daten gehabt = Update-Datei gibts noch nicht, kein Fehler
+            return $this->updater->hadData()
+                ? '<p>Die Update-Prüfung hat gerade nicht geklappt. WordPress versucht es später noch einmal.</p>'
+                : '<p>' . self::NO_DATA . '</p>';
         }
         $installed = $this->updater->installedVersion();
         $p = $u->isNewerThan($installed)
