@@ -1,6 +1,6 @@
 {
   "runtime": "mgd-share-wordpress",
   "main": "mgd-share-wordpress.php",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "slug": "mgd-share-wordpress"
 }

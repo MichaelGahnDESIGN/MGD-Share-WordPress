@@ -15,6 +15,7 @@ jobs:
         with: { node-version: '24.22.1' }
       - run: find mgd-share-wordpress -name '*.php' -exec php -l {} \;
       - run: node --check mgd-share-wordpress/assets/share.js && node --check mgd-share-wordpress/assets/admin.js
-      - run: php tests/share-options.php
+      - run: php tests/share-options.php && php tests/catalog-package.php
+      - run: node --check mgd-share-wordpress/includes/Kit/Platform/WordPress/assets/kit-catalog.js
       - run: python3 scripts/check-docs.py
       - run: python3 scripts/build-package.py

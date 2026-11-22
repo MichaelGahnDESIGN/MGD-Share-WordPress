@@ -1,5 +1,7 @@
 # Plugin-Kollektion im WordPress-Backend
 
+> **Hinweis ab 0.3.1:** Die alte Seite „MGD Plugin-Kollektion“ gibt es nicht mehr. Die Liste „Weitere Plugins“ kommt jetzt aus dem Baukasten (Seite **MGD Share → Info und Updates**). Dieser Text beschreibt den alten Stand.
+
 Die GitHub-Ausgabe erhält einen gemeinsamen, lokal gerenderten Katalog. Die getrennten WordPress.org-Einreichungskandidaten bleiben unverändert und enthalten diesen externen Katalog nicht.
 
 ## Gestaltungsvertrag
