@@ -35,7 +35,7 @@ MGD Share bringt einen Share-Button mit **Link kopieren**, System-Teilen, E-Mail
 
 ## Installation
 
-1. Lade [**MGD Share 0.3.1**](https://github.com/MichaelGahnDESIGN/MGD-Share-WordPress/releases/download/v0.3.1/mgd-share-wordpress-0.3.1.zip) herunter oder erzeuge lokal ein Paket.
+1. Lade [**MGD Share 2.1.1**](https://github.com/MichaelGahnDESIGN/MGD-Share-WordPress/releases/download/v2.1.1/mgd-share-wordpress-2.1.1.zip) herunter oder erzeuge lokal ein Paket.
 2. Öffne in WordPress **Plugins → Installieren → Plugin hochladen**.
 3. Aktiviere **MGD Share**.
 4. Konfiguriere unter **MGD Share → Einstellungen** Position, Funktionen und Design.
@@ -82,7 +82,7 @@ python3 scripts/check-docs.py
 python3 scripts/build-package.py
 ```
 
-Das installierbare Paket wird unter `dist/mgd-share-wordpress-0.3.1.zip` erzeugt.
+Das installierbare Paket wird unter `dist/mgd-share-wordpress-2.1.1.zip` erzeugt.
 
 ## Sicherheit
 
@@ -144,6 +144,10 @@ Deine bisherigen Einstellungen bleiben erhalten. Die Leiste sieht nach dem Updat
 - **Link kopieren:** Der Button zeigt kurz „Kopiert!“ mit Häkchen.
 - **Shortcode mit eigenen Werten**, zum Beispiel `[mgd_share shape="pill" networks="whatsapp,copy"]`.
 
+
+## 2.1.1 – Gemeinsame Verwaltung unter MGD Tools (24.11.2026)
+
+Share hängt jetzt unter dem Menü „MGD Tools“. Eigenes Menü weg, neue Icons, Baukasten 1.15.0. Deine Einstellungen bleiben.
 
 ## 0.3.1 – Neue Ansicht „Weitere Plugins“ (22.11.2026)
 

@@ -3,7 +3,7 @@
  * Plugin Name: MGD Share
  * Plugin URI: https://theme.michael-gahn.de/plugins/plugin-share-wordpress
  * Description: Datenschutzfreundliche Teilen-Leiste für Beiträge und Seiten, ohne Tracker.
- * Version: 0.3.1
+ * Version: 2.1.1
  * Requires at least: 6.5
  * Requires PHP: 8.1
  * Author: Michael Gahn DESIGN
@@ -15,7 +15,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'MGD_SHARE_VERSION', '0.3.1' );
+define( 'MGD_SHARE_VERSION', '2.1.1' );
 define( 'MGD_SHARE_FILE', __FILE__ );
 define( 'MGD_SHARE_DIR', plugin_dir_path( __FILE__ ) );
 define( 'MGD_SHARE_URL', plugin_dir_url( __FILE__ ) );
@@ -53,6 +53,6 @@ Setup::cleanupLegacy( 'mgd-share-wordpress', MGD_SHARE_VERSION, array( 'mgd_admi
 Setup::tools( __FILE__, 'mgd-share-wordpress', 'wordpress', MGD_SHARE_VERSION, 'MGD Share', MGD_Share_Plugin::$updater, array(
     'slug'     => 'plugin-share-wordpress',
     'repo'     => 'MGD-Share-WordPress',
-    'settings' => array( 'page' => 'mgd-share-settings', 'title' => 'Share', 'cap' => 'manage_options', 'render' => static function (): void { MGD_Share_Plugin::$admin?->page(); } ),
+    'settings' => array( 'page' => 'mgd-share-settings', 'legacy' => array( 'mgd-share', 'mgd-share-plugins' ), 'title' => 'Share', 'cap' => 'manage_options', 'render' => static function (): void { MGD_Share_Plugin::$admin?->page(); } ),
     'license'  => false,
 ) );
