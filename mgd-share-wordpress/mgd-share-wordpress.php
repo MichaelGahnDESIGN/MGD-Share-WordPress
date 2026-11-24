@@ -1,12 +1,13 @@
 <?php
 /**
  * Plugin Name: MGD Share
- * Plugin URI: https://github.com/MichaelGahnDESIGN/MGD-Share-WordPress
- * Description: Datenschutzfreundliche Teilen-Leiste mit vielen Netzwerken, Live-Vorschau und frei einstellbarem Design.
+ * Plugin URI: https://theme.michael-gahn.de/plugins/plugin-share-wordpress
+ * Description: Datenschutzfreundliche Teilen-Leiste für Beiträge und Seiten, ohne Tracker.
  * Version: 0.3.1
  * Requires at least: 6.5
  * Requires PHP: 8.1
  * Author: Michael Gahn DESIGN
+ * Author URI: https://michael-gahn.de
  * License: GPL-2.0-or-later
  * Update URI: https://github.com/MichaelGahnDESIGN/MGD-Share-WordPress
  * Text Domain: mgd-share
@@ -40,13 +41,18 @@ spl_autoload_register( static function ( string $class ): void {
     }
 } );
 
-// Updater vom Baukasten, startet auch den Install-Melder - alter GitHub-Updater (Admin-Tools) ist raus
-MGD_Share_Plugin::$updater = \Mgd\Share\Kit\Platform\WordPress\Setup::updater( __FILE__, 'mgd-share-wordpress', 'wordpress', MGD_SHARE_VERSION, 'MGD Share', admin_url( 'admin.php?page=mgd-share-plugins' ) );
-// Reste vom alten Updater wegräumen, 1x pro Version
-\Mgd\Share\Kit\Platform\WordPress\Setup::cleanupLegacy( 'mgd-share-wordpress', MGD_SHARE_VERSION, array( 'mgd_admin_release_*' ) );
+// Updater + MGD Tools Menü vom Baukasten
+use Mgd\Share\Kit\Platform\WordPress\Setup;
+use Mgd\Share\Kit\Platform\WordPress\Tools;
 
-// Link Einstellungen in der Plugin-Liste
-add_filter( 'plugin_action_links_' . plugin_basename( __FILE__ ), static function ( array $links ): array {
-    array_unshift( $links, '<a href="' . esc_url( admin_url( 'admin.php?page=mgd-share-settings' ) ) . '">Einstellungen</a>' );
-    return $links;
-} );
+MGD_Share_Plugin::$updater = Setup::updater( __FILE__, 'mgd-share-wordpress', 'wordpress', MGD_SHARE_VERSION, 'MGD Share', Tools::url() );
+// Reste vom alten Updater wegräumen, 1x pro Version
+Setup::cleanupLegacy( 'mgd-share-wordpress', MGD_SHARE_VERSION, array( 'mgd_admin_release_*' ) );
+
+// Einstellungsseite unter MGD Tools - Seiten-Kennung bleibt mgd-share-settings
+Setup::tools( __FILE__, 'mgd-share-wordpress', 'wordpress', MGD_SHARE_VERSION, 'MGD Share', MGD_Share_Plugin::$updater, array(
+    'slug'     => 'plugin-share-wordpress',
+    'repo'     => 'MGD-Share-WordPress',
+    'settings' => array( 'page' => 'mgd-share-settings', 'title' => 'Share', 'cap' => 'manage_options', 'render' => static function (): void { MGD_Share_Plugin::$admin?->page(); } ),
+    'license'  => false,
+) );

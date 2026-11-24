@@ -7,6 +7,7 @@ final class MGD_Share_Plugin {
     public const NETWORKS = array( 'copy', 'native', 'email', 'whatsapp', 'linkedin', 'facebook', 'telegram', 'pinterest', 'reddit', 'xing', 'bluesky', 'threads', 'print' );
 
     // Updater vom Baukasten, setzt die Haupt-Datei - fürs Dashboard
+    public static ?MGD_Share_Admin $admin = null;
     public static ?\Mgd\Share\Kit\Platform\WordPress\Updater $updater = null;
 
     public static function defaults(): array {
@@ -42,7 +43,8 @@ final class MGD_Share_Plugin {
         add_action( 'wp_footer', array( $renderer, 'floating' ) );
         add_action( 'admin_init', array( self::class, 'drop_removed_networks' ) );
         if ( is_admin() ) {
-            ( new MGD_Share_Admin( new MGD_Share_Privacy_Scanner(), $renderer ) )->register();
+            self::$admin = new MGD_Share_Admin( new MGD_Share_Privacy_Scanner(), $renderer );
+            self::$admin->register();
         }
     }
 }

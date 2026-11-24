@@ -3,26 +3,17 @@ defined( 'ABSPATH' ) || exit;
 
 /** Administrationsseiten für Darstellung, Funktionen und datenschutzrelevante Hinweise. */
 final class MGD_Share_Admin {
-    private string $settings_hook = '';
 
     public function __construct( private MGD_Share_Privacy_Scanner $scanner, private MGD_Share_Renderer $renderer ) {}
 
     public function register(): void {
-        add_action( 'admin_menu', array( $this, 'menu' ) );
         add_action( 'admin_post_mgd_share_save', array( $this, 'save' ) );
         add_action( 'admin_enqueue_scripts', array( $this, 'assets' ) );
     }
 
-    public function menu(): void {
-        add_menu_page( 'MGD Share', 'MGD Share', 'manage_options', 'mgd-share', array( $this, 'dashboard' ), 'dashicons-share', 58 );
-        $this->settings_hook = (string) add_submenu_page( 'mgd-share', 'Einstellungen', 'Einstellungen', 'manage_options', 'mgd-share-settings', array( $this, 'settings_page' ) );
-        // Dashboard vom Baukasten: Info, Updates, Weitere Plugins, Installation melden
-        add_submenu_page( 'mgd-share', 'Info und Updates', 'Info und Updates', 'manage_options', 'mgd-share-plugins', array( $this, 'plugins_page' ) );
-    }
-
     // CSS/JS nur auf der Einstellungsseite
     public function assets( string $hook ): void {
-        if ( $hook !== $this->settings_hook ) { return; }
+        if ( ! str_ends_with( $hook, '_page_mgd-share-settings' ) ) { return; }
         $this->renderer->register_assets();
         wp_enqueue_style( 'mgd-share' );
         wp_enqueue_script( 'mgd-share' );
@@ -30,7 +21,12 @@ final class MGD_Share_Admin {
         wp_enqueue_script( 'mgd-share-admin', MGD_SHARE_URL . 'assets/admin.js', array( 'jquery-ui-sortable', 'mgd-share' ), MGD_SHARE_VERSION, true );
     }
 
-    public function dashboard(): void {
+    public function page(): void {
+        $this->settings_page();
+        $this->dashboard();
+    }
+
+    private function dashboard(): void {
         $plugins = $this->scanner->scan();
         ?><div class="wrap"><h1>MGD Share Dashboard</h1>
         <p>MGD Share lädt keine Social-Media-Skripte und setzt selbst keine Cookies. Externe Plattformen werden ausschließlich nach einem Klick geöffnet.</p>
@@ -63,28 +59,6 @@ final class MGD_Share_Admin {
             );
         }
         echo '</div>';
-    }
-
-    public function plugins_page(): void {
-        if ( ! current_user_can( 'manage_options' ) ) { wp_die( 'Nicht berechtigt.', '', array( 'response' => 403 ) ); }
-        $list = \Mgd\Share\Kit\Platform\WordPress\Setup::recommendations( 'mgd-share-wordpress', 'wordpress', 'plugin-share-wordpress', $this->fallback_plugins(), 'MGD-Share-WordPress' );
-        // parent leer = kein eigener Menüpunkt, Lizenz bleibt aus
-        $dash = \Mgd\Share\Kit\Platform\WordPress\Setup::dashboard( 'mgd-share-wordpress', 'wordpress', MGD_SHARE_VERSION, 'MGD Share', MGD_Share_Plugin::$updater, $list, false, '' );
-        if ( null === $dash ) { echo '<div class="wrap"><p>Die Seite konnte gerade nicht geladen werden.</p></div>'; return; }
-        $dash->page();
-    }
-
-    /** Ersatzliste aus plugin-catalog/plugins.json, falls theme.michael-gahn.de nicht antwortet. */
-    private function fallback_plugins(): array {
-        $raw = file_get_contents( MGD_SHARE_DIR . 'includes/plugin-catalog/plugins.json' );
-        $data = is_string( $raw ) ? json_decode( $raw, true ) : null;
-        $out = array();
-        foreach ( is_array( $data ) ? $data : array() as $row ) {
-            if ( is_array( $row ) && ! empty( $row['slug'] ) ) {
-                $out[] = array( 'slug' => (string) $row['slug'], 'name' => (string) ( $row['name'] ?? '' ), 'description' => (string) ( $row['description'] ?? '' ), 'version' => '' );
-            }
-        }
-        return $out;
     }
 
     public function save(): void {

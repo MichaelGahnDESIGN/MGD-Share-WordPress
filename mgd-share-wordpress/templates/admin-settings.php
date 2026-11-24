@@ -120,7 +120,7 @@ $swatches = array( '#1d4ed8', '#c8161a', '#0f766e', '#7c3aed', '#ea580c', '#db27
                     <p><code>[mgd_share shape="pill" color_mode="brand" networks="whatsapp,email,copy"]</code></p>
                     <p class="description">Möglich: shape, variant, color_mode, size, display, align, hover, container, accent, label, show_label, networks.</p>
                 </div>
-                <p><a href="<?php echo esc_url( admin_url( 'admin.php?page=mgd-share-plugins' ) ); ?>">Info, Updates und Installation melden</a></p>
+                <p><a href="<?php echo esc_url( \Mgd\Share\Kit\Platform\WordPress\Tools::url() ); ?>">Info, Updates und Installation melden</a></p>
             </aside>
         </div>
     </form>

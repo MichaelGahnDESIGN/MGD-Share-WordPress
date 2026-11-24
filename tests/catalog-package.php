@@ -28,8 +28,8 @@ foreach (array('includes/class-mgd-wordpress-plugin-catalog.php', 'includes/plug
 $bootstrap = $main;
 foreach (glob($runtime . '/includes/*.php') as $file) { $bootstrap .= file_get_contents($file); }
 // ab 0.2.0: Weitere Plugins über den Baukasten, alter GitHub-Updater nicht mehr angemeldet
-mgd_catalog_assert(str_contains($bootstrap, 'Setup::dashboard('), 'Dashboard vom Baukasten');
-mgd_catalog_assert(str_contains($bootstrap, 'MGD_Share_Plugin::$updater, $list, false, \'\''), 'Lizenz-Baustein aus');
+mgd_catalog_assert(str_contains($main, 'Setup::tools('), 'MGD Tools vom Baukasten');
+mgd_catalog_assert(!str_contains($bootstrap, 'add_menu_page') && !str_contains($bootstrap, 'add_submenu_page'), 'Kein eigenes Menü');
 // X/Twitter darf nie als Ziel auftauchen
 foreach (glob($runtime . '/{includes,templates,assets}/*.{php,js}', GLOB_BRACE) as $file) { mgd_catalog_assert(!preg_match("/'x'|x\\.com|twitter/i", (string) preg_replace('#//.*#', '', file_get_contents($file))), 'Kein X in ' . basename($file)); }
 // Installieren meldet der Baukasten selbst an (Setup::boot > catalogAuto, ab Pro 6a64577)
