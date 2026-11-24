@@ -22,9 +22,8 @@ final class ToolsPages
 
     public static function menuTail(string $owner): void
     {
-        if (self::licenseOn()) {
-            \add_submenu_page(Tools::PARENT, ToolsTexts::LICENSE, ToolsTexts::LICENSE, 'manage_options', Tools::PAGE_LICENSE, static fn () => self::license($owner));
-        }
+        // immer da: ohne Pro-Plugin freundlicher Satz statt "nicht berechtigt" (Befund share)
+        \add_submenu_page(Tools::PARENT, ToolsTexts::LICENSE, ToolsTexts::LICENSE, 'manage_options', Tools::PAGE_LICENSE, static fn () => self::license($owner));
         if (Tools::local($owner) !== null) {
             \add_submenu_page(Tools::PARENT, ToolsTexts::CATALOG, ToolsTexts::CATALOG, 'manage_options', Tools::PAGE_CATALOG, static fn () => self::catalog($owner));
         }

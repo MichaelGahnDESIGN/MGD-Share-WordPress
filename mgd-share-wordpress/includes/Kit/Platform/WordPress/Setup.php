@@ -247,8 +247,10 @@ final class Setup
                 return false;
             }
             self::catalogActions($product, $rec, Tools::url(Tools::PAGE_CATALOG));
+            // Farbwähler auf allen MGD-Seiten (ersetzt input type=color / wp-color-picker)
+            ColorPicker::register();
             $page = is_array($o['settings'] ?? null) && is_string($o['settings']['page'] ?? null) ? $o['settings']['page'] : '';
-            PluginList::register(\plugin_basename($pluginFile), Tools::url($page !== '' && preg_match(Tools::PAGE_RE, $page) === 1 ? $page : Tools::PARENT));
+            PluginList::register(\plugin_basename($pluginFile), Tools::url($page !== '' && preg_match(Tools::PAGE_RE, $page) === 1 ? $page : Tools::PARENT), $icons['1x'] ?? '');
 
             return true;
         } catch (\Throwable) {
@@ -265,7 +267,12 @@ final class Setup
         $out = [];
         foreach (['1x' => 'icon-128x128.png', '2x' => 'icon-256x256.png', 'svg' => 'icon.svg'] as $k => $f) {
             if (is_file(dirname($pluginFile) . '/assets/' . $f) && function_exists('plugins_url')) {
-                $out[$k] = (string) \plugins_url('assets/' . $f, $pluginFile);
+                $url = (string) \plugins_url('assets/' . $f, $pluginFile);
+                // hinter Proxy meint WP manchmal http, die Seite läuft aber mit https (Befund share)
+                if (str_starts_with((string) \home_url(), 'https://')) {
+                    $url = (string) preg_replace('#^http://#', 'https://', $url);
+                }
+                $out[$k] = $url;
             }
         }
 
@@ -295,6 +302,7 @@ final class Setup
                 $recommendations,
                 self::license($product, $platform, $licenseEnabled),
                 static fn (): string => WordPress::settingsHtml($product, $platform, $version),
+                $parent === '',
             );
             if ($parent !== '') {
                 $d->register($parent);
